@@ -21,7 +21,7 @@
 
 		wp_link_pages(
 			array(
-				'before' => '<div class="clearfix"></div><div class="page-links">' . esc_html__( 'Pages:', 'aestazia' ),
+				'before' => '<div class="clearfix"></div><div class="page-links">' . esc_html__( 'Pages:', 'aestazia-child' ),
 				'after'  => '</div>',
 			)
 		);
@@ -36,7 +36,7 @@
 				sprintf(
 					wp_kses(
 						/* translators: %s: Name of current post. Only visible to screen readers */
-						__( 'Edit <span class="screen-reader-text">%s</span>', 'aestazia' ),
+						__( 'Edit <span class="screen-reader-text">%s</span>', 'aestazia-child' ),
 						array(
 							'span' => array(
 								'class' => array(),
