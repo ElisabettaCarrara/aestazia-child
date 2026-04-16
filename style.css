@@ -1,0 +1,368 @@
+/*
+Theme Name: Aestazia Child
+Theme URI: https://elica-webservices.it/
+Description: Child theme for the Aestazia ClassicPress theme to override colors
+Author: Elisabetta Carrara
+Template: aestazia
+Version: 1.0
+*/
+
+/* =========================
+   COLOR SYSTEM
+   ========================= */
+
+:root {
+
+  --bs-primary: #E34A6F;
+  --bs-secondary: #279D9F;
+
+  --bs-light: #DEFFFC;
+  --bs-dark: #423E3B;
+
+  --bs-body-color: #5B5B5B;
+  --bs-body-bg: #ffffff;
+
+}
+
+/* =========================
+   TYPOGRAPHY
+   ========================= */
+
+body {
+  color: #5B5B5B;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #423E3B;
+}
+
+/* =========================
+   LINKS
+   ========================= */
+
+a {
+  color: #279D9F;
+  text-decoration: none;
+}
+
+a:hover,
+a:focus {
+  color: #E34A6F;
+  text-decoration: underline;
+}
+
+/* =========================
+   BUTTONS (Updated)
+   ========================= */
+
+.btn-primary {
+  background-color: #E34A6F;
+  border-color: #E34A6F;
+}
+
+.btn-primary:hover {
+  background-color: #c63c5f;
+  border-color: #c63c5f;
+}
+
+/* Add Focus State */
+.btn-primary:focus,
+.btn-primary.focus {
+  background-color: #E34A6F;
+  border-color: #E34A6F;
+  /* Uses your primary hex #E34A6F converted to an rgba value at 50% opacity */
+  box-shadow: 0 0 0 0.25rem rgba(227, 74, 111, 0.5); 
+}
+
+/* Add Active State */
+.btn-primary:active,
+.btn-primary.active,
+.btn-primary:active:focus {
+  background-color: #c63c5f;
+  border-color: #c63c5f;
+  box-shadow: 0 0 0 0.25rem rgba(227, 74, 111, 0.5);
+}
+
+.btn-secondary {
+  background-color: #279D9F;
+  border-color: #279D9F;
+}
+
+.btn-secondary:hover {
+  background-color: #1f7f81;
+  border-color: #1f7f81;
+}
+
+/* Optional: Add Secondary Focus/Active States */
+.btn-secondary:focus,
+.btn-secondary.focus {
+  background-color: #279D9F;
+  border-color: #279D9F;
+  box-shadow: 0 0 0 0.25rem rgba(39, 157, 159, 0.5);
+}
+
+.btn-secondary:active,
+.btn-secondary.active,
+.btn-secondary:active:focus {
+  background-color: #1f7f81;
+  border-color: #1f7f81;
+  box-shadow: 0 0 0 0.25rem rgba(39, 157, 159, 0.5);
+}
+
+/* =========================
+   NAVBAR
+   ========================= */
+
+.navbar {
+  border-bottom: 3px solid #E34A6F;
+}
+
+.navbar a:hover {
+  color: #E34A6F;
+}
+
+/* =========================
+   POSTS
+   ========================= */
+
+.entry-title a {
+  color: #423E3B;
+}
+
+.entry-title a:hover {
+  color: #E34A6F;
+}
+
+/* =========================
+   POST META
+   ========================= */
+
+.entry-meta {
+  font-size: 0.9rem;
+  color: #5B5B5B;
+}
+
+/* =========================
+   SIDEBAR WIDGETS
+   ========================= */
+
+.widget {
+  border-bottom: 1px solid #FEC3A6;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+}
+
+.widget-title {
+  color: #423E3B;
+}
+
+/* =========================
+   TAGS & BADGES
+   ========================= */
+
+.badge,
+.tagcloud a {
+
+  background: #FEC3A6;
+  color: #423E3B;
+
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.tagcloud a:hover {
+  background: #E34A6F;
+  color: #fff;
+}
+
+/* =========================
+   BLOCKQUOTES
+   ========================= */
+
+blockquote {
+
+  border-left: 4px solid #E34A6F;
+  padding-left: 1rem;
+  color: #423E3B;
+
+}
+
+/* =========================
+   CODE BLOCKS
+   ========================= */
+
+pre,
+code {
+
+  background: #DEFFFC;
+  padding: 2px 4px;
+  border-radius: 3px;
+
+}
+
+/* =========================
+   PAGINATION
+   ========================= */
+
+.page-link {
+
+  color: #279D9F;
+
+}
+
+.page-link:hover {
+
+  color: #E34A6F;
+
+}
+
+.page-item.active .page-link {
+
+  background: #E34A6F;
+  border-color: #E34A6F;
+
+}
+
+/* =========================
+   COMMENTS
+   ========================= */
+
+.comment-body {
+
+  border-top: 1px solid #DEFFFC;
+  padding-top: 1rem;
+
+}
+
+/* =========================
+   FOOTER
+   ========================= */
+
+.site-footer {
+
+  background: #423E3B;
+  color: #DEFFFC;
+  padding: 2rem 0;
+
+}
+
+.site-footer a {
+
+  color: #FEC3A6;
+
+}
+
+.site-footer a:hover {
+
+  color: #E34A6F;
+
+}
+
+/* =========================
+   SEARCH
+   ========================= */
+
+.search-form .search-submit {
+
+  background: #E34A6F;
+  border-color: #E34A6F;
+
+}
+
+.search-form .search-submit:hover {
+
+  background: #c63c5f;
+
+}
+
+/* =========================
+   HEADER LOGO PADDING
+   ========================= */
+
+.site-branding img {
+
+  padding-top: 20px;
+  padding-bottom: 20px;
+
+}
+
+/* ========================
+   FULL WIDTH FOOTER
+   ======================== */
+
+.site-footer {
+
+  background: #423E3B;
+  color: #DEFFFC;
+
+}
+
+.site-footer a {
+  color: #FEC3A6;
+}
+
+.site-footer a:hover {
+  color: #E34A6F;
+}
+
+/* =========================
+   FOOTER
+   ========================= */
+
+.site-footer {
+
+  background: #423E3B;
+  color: #DEFFFC;
+
+  padding-top: 40px;
+  padding-bottom: 20px;
+
+}
+
+/* Footer titles */
+
+.footer-widget-title {
+
+  color: #FEC3A6;
+  font-size: 1.2rem;
+  margin-bottom: 15px;
+
+}
+
+/* Footer links */
+
+.site-footer a {
+
+  color: #DEFFFC;
+
+}
+
+.site-footer a:hover {
+
+  color: #E34A6F;
+
+}
+
+/* Footer lists */
+
+.site-footer ul {
+
+  list-style: none;
+  padding-left: 0;
+
+}
+
+.site-footer li {
+
+  margin-bottom: 6px;
+
+}
+
+/* Copyright area */
+
+.site-info {
+
+  margin-top: 20px;
+  font-size: 0.9rem;
+	
+}
