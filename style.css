@@ -1,10 +1,22 @@
 /*
 Theme Name: Aestazia Child
-Theme URI: https://elica-webservices.it/
-Description: Child theme for the Aestazia ClassicPress theme to override colors
+Theme URI: https://github.com/ElisabettaCarrara/aestazia-child
 Author: Elisabetta Carrara
+Author URI: https://elica-webservices.it/
+Description: Aestazia Child is a lightweight child theme based on the Aestazia ClassicPress Theme, featuring custom colors, full-width templates, and a widgetized footer.
+Version: 1.0.0
+Requires PHP: 8.0
+Requires CP: 2.0
+Tested up to CP: 2.7.0
+License: GNU General Public License v2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
+Tags: child-theme, custom-colors, full-width-template, footer-widgets, two-columns
+Text Domain: aestazia-child
 Template: aestazia
-Version: 1.0
+
+Copyright (C) 2026 Elisabetta Carrara.
+
+Aestazia Child ClassicPress Theme is licensed under the GPL v2 or later. Use it to make something cool, have fun, and share what you've learned with others.
 */
 
 /* =========================
