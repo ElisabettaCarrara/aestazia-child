@@ -7,7 +7,7 @@
  * @package Aestazia_Child
  */
 
-<article id="post-<?php the_ID(); ?>" <?php post_class( 'pt-1 mb-4 pb-4 border-bottom' ); ?>>
+<article id="post-<?php the_ID(); ?>" <?php post_class( 'pt-1 mb-4 pb-4 border-bottom' ); ?>
 
 	<header class="entry-header mb-3">
 		<?php the_title( sprintf( '<h2 class="entry-title"><a href="%s" rel="bookmark">', esc_url( get_permalink() ) ), '</a></h2>' ); ?>
