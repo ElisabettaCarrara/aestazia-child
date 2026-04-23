@@ -378,3 +378,23 @@ code {
   font-size: 0.9rem;
 	
 }
+
+@media (min-width: 576px) {
+
+    .layout-left .post-thumb {
+        order: 1;
+    }
+
+    .layout-left .post-content {
+        order: 2;
+    }
+
+    .layout-right .post-thumb {
+        order: 2;
+    }
+
+    .layout-right .post-content {
+        order: 1;
+    }
+
+}
