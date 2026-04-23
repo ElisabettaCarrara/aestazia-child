@@ -20,32 +20,47 @@ Aestazia Child ClassicPress Theme is licensed under the GPL v2 or later. Use it 
 */
 
 /* =========================
-   COLOR SYSTEM
+   THEME TOKENS (SKIN SYSTEM)
    ========================= */
 
 :root {
 
-  --bs-primary: #E34A6F;
-  --bs-secondary: #279D9F;
+  /* Brand */
+  --color-primary: #E34A6F;
+  --color-primary-dark: #c63c5f;
 
-  --bs-light: #DEFFFC;
-  --bs-dark: #423E3B;
+  --color-secondary: #279D9F;
+  --color-secondary-dark: #1f7f81;
 
-  --bs-body-color: #5B5B5B;
-  --bs-body-bg: #ffffff;
+  /* Neutrals */
+  --color-dark: #423E3B;
+  --color-text: #5B5B5B;
+  --color-light: #DEFFFC;
+  --color-white: #ffffff;
 
+  /* Accent */
+  --color-accent: #FEC3A6;
+
+  /* UI roles */
+  --body-bg: var(--color-white);
+  --body-text: var(--color-text);
+
+  /* Effects */
+  --focus-ring-primary: rgba(227, 74, 111, 0.5);
+  --focus-ring-secondary: rgba(39, 157, 159, 0.5);
 }
 
 /* =========================
-   TYPOGRAPHY
+   BASE TYPOGRAPHY
    ========================= */
 
 body {
-  color: #5B5B5B;
+  color: var(--body-text);
+  background: var(--body-bg);
 }
 
 h1, h2, h3, h4, h5, h6 {
-  color: #423E3B;
+  color: var(--color-dark);
 }
 
 /* =========================
@@ -53,72 +68,64 @@ h1, h2, h3, h4, h5, h6 {
    ========================= */
 
 a {
-  color: #279D9F;
+  color: var(--color-secondary);
   text-decoration: none;
 }
 
 a:hover,
 a:focus {
-  color: #E34A6F;
+  color: var(--color-primary);
   text-decoration: underline;
 }
 
 /* =========================
-   BUTTONS (Updated)
+   BUTTONS
    ========================= */
 
 .btn-primary {
-  background-color: #E34A6F;
-  border-color: #E34A6F;
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
 }
 
 .btn-primary:hover {
-  background-color: #c63c5f;
-  border-color: #c63c5f;
+  background-color: var(--color-primary-dark);
+  border-color: var(--color-primary-dark);
 }
 
-/* Add Focus State */
 .btn-primary:focus,
 .btn-primary.focus {
-  background-color: #E34A6F;
-  border-color: #E34A6F;
-  /* Uses your primary hex #E34A6F converted to an rgba value at 50% opacity */
-  box-shadow: 0 0 0 0.25rem rgba(227, 74, 111, 0.5); 
+  box-shadow: 0 0 0 0.25rem var(--focus-ring-primary);
 }
 
-/* Add Active State */
 .btn-primary:active,
 .btn-primary.active,
 .btn-primary:active:focus {
-  background-color: #c63c5f;
-  border-color: #c63c5f;
-  box-shadow: 0 0 0 0.25rem rgba(227, 74, 111, 0.5);
+  background-color: var(--color-primary-dark);
+  border-color: var(--color-primary-dark);
+  box-shadow: 0 0 0 0.25rem var(--focus-ring-primary);
 }
 
 .btn-secondary {
-  background-color: #279D9F;
-  border-color: #279D9F;
+  background-color: var(--color-secondary);
+  border-color: var(--color-secondary);
 }
 
 .btn-secondary:hover {
-  background-color: #1f7f81;
-  border-color: #1f7f81;
+  background-color: var(--color-secondary-dark);
+  border-color: var(--color-secondary-dark);
 }
 
-/* Optional: Add Secondary Focus/Active States */
 .btn-secondary:focus,
 .btn-secondary.focus {
-  background-color: #279D9F;
-  border-color: #279D9F;
-  box-shadow: 0 0 0 0.25rem rgba(39, 157, 159, 0.5);
+  box-shadow: 0 0 0 0.25rem var(--focus-ring-secondary);
 }
 
 .btn-secondary:active,
 .btn-secondary.active,
 .btn-secondary:active:focus {
-  background-color: #1f7f81;
-  border-color: #1f7f81;
-  box-shadow: 0 0 0 0.25rem rgba(39, 157, 159, 0.5);
+  background-color: var(--color-secondary-dark);
+  border-color: var(--color-secondary-dark);
+  box-shadow: 0 0 0 0.25rem var(--focus-ring-secondary);
 }
 
 /* =========================
@@ -126,11 +133,11 @@ a:focus {
    ========================= */
 
 .navbar {
-  border-bottom: 3px solid #E34A6F;
+  border-bottom: 3px solid var(--color-primary);
 }
 
 .navbar a:hover {
-  color: #E34A6F;
+  color: var(--color-primary);
 }
 
 /* =========================
@@ -138,53 +145,51 @@ a:focus {
    ========================= */
 
 .entry-title a {
-  color: #423E3B;
+  color: var(--color-dark);
 }
 
 .entry-title a:hover {
-  color: #E34A6F;
+  color: var(--color-primary);
 }
 
 /* =========================
-   POST META
+   META
    ========================= */
 
 .entry-meta {
   font-size: 0.9rem;
-  color: #5B5B5B;
+  color: var(--color-text);
 }
 
 /* =========================
-   SIDEBAR WIDGETS
+   SIDEBAR
    ========================= */
 
 .widget {
-  border-bottom: 1px solid #FEC3A6;
+  border-bottom: 1px solid var(--color-accent);
   margin-bottom: 1.5rem;
   padding-bottom: 1rem;
 }
 
 .widget-title {
-  color: #423E3B;
+  color: var(--color-dark);
 }
 
 /* =========================
-   TAGS & BADGES
+   TAGS / BADGES
    ========================= */
 
 .badge,
 .tagcloud a {
-
-  background: #FEC3A6;
-  color: #423E3B;
-
+  background: var(--color-accent);
+  color: var(--color-dark);
   padding: 4px 8px;
   border-radius: 4px;
 }
 
 .tagcloud a:hover {
-  background: #E34A6F;
-  color: #fff;
+  background: var(--color-primary);
+  color: var(--color-white);
 }
 
 /* =========================
@@ -192,24 +197,20 @@ a:focus {
    ========================= */
 
 blockquote {
-
-  border-left: 4px solid #E34A6F;
+  border-left: 4px solid var(--color-primary);
   padding-left: 1rem;
-  color: #423E3B;
-
+  color: var(--color-dark);
 }
 
 /* =========================
-   CODE BLOCKS
+   CODE
    ========================= */
 
 pre,
 code {
-
-  background: #DEFFFC;
+  background: var(--color-light);
   padding: 2px 4px;
   border-radius: 3px;
-
 }
 
 /* =========================
@@ -217,22 +218,16 @@ code {
    ========================= */
 
 .page-link {
-
-  color: #279D9F;
-
+  color: var(--color-secondary);
 }
 
 .page-link:hover {
-
-  color: #E34A6F;
-
+  color: var(--color-primary);
 }
 
 .page-item.active .page-link {
-
-  background: #E34A6F;
-  border-color: #E34A6F;
-
+  background: var(--color-primary);
+  border-color: var(--color-primary);
 }
 
 /* =========================
@@ -240,34 +235,8 @@ code {
    ========================= */
 
 .comment-body {
-
-  border-top: 1px solid #DEFFFC;
+  border-top: 1px solid var(--color-light);
   padding-top: 1rem;
-
-}
-
-/* =========================
-   FOOTER
-   ========================= */
-
-.site-footer {
-
-  background: #423E3B;
-  color: #DEFFFC;
-  padding: 2rem 0;
-
-}
-
-.site-footer a {
-
-  color: #FEC3A6;
-
-}
-
-.site-footer a:hover {
-
-  color: #E34A6F;
-
 }
 
 /* =========================
@@ -275,126 +244,80 @@ code {
    ========================= */
 
 .search-form .search-submit {
-
-  background: #E34A6F;
-  border-color: #E34A6F;
-
+  background: var(--color-primary);
+  border-color: var(--color-primary);
 }
 
 .search-form .search-submit:hover {
-
-  background: #c63c5f;
-
+  background: var(--color-primary-dark);
 }
 
 /* =========================
-   HEADER LOGO PADDING
+   HEADER
    ========================= */
 
 .site-branding img {
-
   padding-top: 20px;
   padding-bottom: 20px;
-
-}
-
-/* ========================
-   FULL WIDTH FOOTER
-   ======================== */
-
-.site-footer {
-
-  background: #423E3B;
-  color: #DEFFFC;
-
-}
-
-.site-footer a {
-  color: #FEC3A6;
-}
-
-.site-footer a:hover {
-  color: #E34A6F;
 }
 
 /* =========================
-   FOOTER
+   FOOTER (DEDUPED + FINAL)
    ========================= */
 
 .site-footer {
-
-  background: #423E3B;
-  color: #DEFFFC;
-
-  padding-top: 40px;
-  padding-bottom: 20px;
-
+  background: var(--color-dark);
+  color: var(--color-light);
+  padding: 40px 0 20px;
 }
-
-/* Footer titles */
-
-.footer-widget-title {
-
-  color: #FEC3A6;
-  font-size: 1.2rem;
-  margin-bottom: 15px;
-
-}
-
-/* Footer links */
 
 .site-footer a {
-
-  color: #DEFFFC;
-
+  color: var(--color-light);
 }
 
 .site-footer a:hover {
-
-  color: #E34A6F;
-
+  color: var(--color-primary);
 }
 
-/* Footer lists */
+.footer-widget-title {
+  color: var(--color-accent);
+  font-size: 1.2rem;
+  margin-bottom: 15px;
+}
 
 .site-footer ul {
-
   list-style: none;
   padding-left: 0;
-
 }
 
 .site-footer li {
-
   margin-bottom: 6px;
-
 }
-
-/* Copyright area */
 
 .site-info {
-
   margin-top: 20px;
   font-size: 0.9rem;
-	
 }
+
+/* =========================
+   LAYOUT HELPERS
+   ========================= */
 
 @media (min-width: 576px) {
 
-    .layout-left .post-thumb {
-        order: 1;
-    }
+  .layout-left .post-thumb {
+    order: 1;
+  }
 
-    .layout-left .post-content {
-        order: 2;
-    }
+  .layout-left .post-content {
+    order: 2;
+  }
 
-    .layout-right .post-thumb {
-        order: 2;
-    }
+  .layout-right .post-thumb {
+    order: 2;
+  }
 
-    .layout-right .post-content {
-        order: 1;
-    }
-
+  .layout-right .post-content {
+    order: 1;
+  }
 }
