@@ -321,3 +321,32 @@ code {
     order: 1;
   }
 }
+
+/* Post Card Styling */
+.hentry, 
+.type-post {
+    /* 1. Add the border on all four sides */
+    border: 1px solid #e0e0e0; 
+    
+    /* 2. Rounded corners */
+    border-radius: 12px;
+    
+    /* 3. Padding inside the card so text doesn't touch the border */
+    padding: 25px;
+    
+    /* 4. Spacing between cards */
+    margin-bottom: 30px;
+    
+    /* Optional: Subtle shadow to match the modern look in your image */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    
+    /* Ensure background is clean */
+    background-color: #ffffff;
+    overflow: hidden; 
+}
+
+/* Ensure images inside the card don't have weird spacing */
+.hentry img {
+    border-radius: 8px; /* Slightly smaller radius for internal elements */
+    margin-bottom: 15px;
+}
