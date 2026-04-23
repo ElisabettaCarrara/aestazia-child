@@ -7,20 +7,6 @@
  * @package Aestazia_Child
  */
 
-global $wp_query;
-
-// Check if the current post in the loop is an even index (1, 3, 5...)
-$is_even = ( $wp_query->current_post % 2 ) === 1;
-
-$image_classes   = $is_even
-	? 'col-12 col-sm-5 ps-sm-1 order-sm-2'
-	: 'col-12 col-sm-5 pe-sm-1 order-sm-1';
-
-$summary_classes = $is_even
-	? 'col-12 col-sm-7 entry-summary order-sm-1'
-	: 'col-12 col-sm-7 entry-summary order-sm-2';
-?>
-
 <article id="post-<?php the_ID(); ?>" <?php post_class( 'pt-1 mb-4 pb-4 border-bottom' ); ?>>
 
 	<header class="entry-header mb-3">
