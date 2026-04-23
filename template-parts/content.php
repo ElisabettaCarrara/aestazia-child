@@ -35,6 +35,7 @@
 		
     	<div class="post-content col-12 col-sm-7 entry-summary">
         <?php the_excerpt(); ?>
+		<a class="read-more" href="<?php the_permalink(); ?>">Read more</a>
     	</div>
 	</div>
 
