@@ -130,7 +130,9 @@ add_action('customize_register', function ($wp_customize) {
         'priority' => 30,
     ]);
 
-    $categories = get_categories();
+    $categories = get_categories( array(
+    'hide_empty' => false,
+) );
 
     foreach ($categories as $cat) {
 
