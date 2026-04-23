@@ -27,13 +27,15 @@
 		<?php endif; ?>
 	</header><!-- .entry-header -->
 
-	<div class="row">
-		<div class="<?php echo esc_attr( $image_classes ); ?>">
-			<?php aestazia_post_thumbnail(); ?>
-		</div>
-		<div class="<?php echo esc_attr( $summary_classes ); ?>">
-			<?php the_excerpt(); ?>
-		</div><!-- .entry-summary -->
+	<div class="row post-card-inner align-items-center">
+    
+    	<div class="post-thumb col-12 col-sm-5">
+        <?php aestazia_post_thumbnail(); ?>
+    	</div>
+		
+    	<div class="post-content col-12 col-sm-7 entry-summary">
+        <?php the_excerpt(); ?>
+    	</div>
 	</div>
 
 	<div class="clearfix"></div>
