@@ -204,12 +204,14 @@ add_action('wp_head', function () {
             continue;
         }
 
-        $selector = '.primary-cat-' . esc_attr($cat->slug);
+        $slug     = sanitize_html_class($cat->slug);
+        $selector = '.primary-cat-' . $slug;
+        $color    = sanitize_hex_color($color);
 
         /**
          * Define CSS variable
          */
-        echo "{$selector} { --cat-color: {$color}; }";
+        echo esc_attr($selector) . ' { --cat-color: ' . esc_attr($color) . '; }';
 
         /**
          * Apply styles conditionally
@@ -217,17 +219,17 @@ add_action('wp_head', function () {
 
         // Card border
         if (get_theme_mod('cat_color_apply_card_border')) {
-            echo "{$selector} { border-left: 4px solid var(--cat-color); }";
+            echo esc_attr($selector) . ' { border-left: 4px solid var(--cat-color); }';
         }
 
         // Title
         if (get_theme_mod('cat_color_apply_title')) {
-            echo "{$selector} .entry-title a { color: var(--cat-color); }";
+            echo esc_attr($selector) . ' .entry-title a { color: var(--cat-color); }';
         }
 
         // Read more
         if (get_theme_mod('cat_color_apply_read_more')) {
-            echo "{$selector} .read-more { color: var(--cat-color); }";
+            echo esc_attr($selector) . ' .read-more { color: var(--cat-color); }';
         }
     }
 
