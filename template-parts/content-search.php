@@ -6,6 +6,7 @@
  *
  * @package Aestazia_Child
  */
+?>
 
 <article id="post-<?php the_ID(); ?>" <?php post_class( 'pt-1 mb-4 pb-4 border-bottom' ); ?>>
 
