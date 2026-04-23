@@ -52,3 +52,22 @@ function aestazia_child_footer_widgets() {
 }
 
 add_action( 'widgets_init', 'aestazia_child_footer_widgets' );
+
+add_filter('post_class', function ($classes) {
+
+    // Apply only to list views
+    if (is_home() || is_archive() || is_search()) {
+
+        global $wp_query;
+
+        // Make sure we're inside the main loop
+        if (isset($wp_query->current_post)) {
+
+            $is_even = ($wp_query->current_post % 2) === 0;
+
+            $classes[] = $is_even ? 'layout-left' : 'layout-right';
+        }
+    }
+
+    return $classes;
+});
