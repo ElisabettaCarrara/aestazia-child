@@ -106,7 +106,7 @@ function aestazia_child_post_classes( $classes ) {
 
 		// 1. Alternating Layout Logic.
 		if ( isset( $wp_query->current_post ) && $wp_query->in_the_loop ) {
-			$classes[] = ( $wp_query->current_post % 2 === 0 ) ? 'layout-left' : 'layout-right'; [cite: 116]
+			$classes[] = ( $wp_query->current_post % 2 === 0 ) ? 'layout-left' : 'layout-right';
 		}
 
 		// 2. Category Color Logic (The "Missing" Piece).
