@@ -1,13 +1,16 @@
 # Aestazia Child Theme
 
-**Aestazia Child** is a lightweight, beautifully styled child theme for the Aestazia ClassicPress theme. It introduces a vibrant new color palette, refined typography, enhanced widget areas, a dynamic category color system, and dedicated page templates to give your site a distinct, modern look while maintaining the robust structural foundation of its parent.
+**Aestazia Child** is a lightweight, beautifully styled child theme for the Aestazia ClassicPress theme. It introduces a vibrant new color palette, refined typography, enhanced widget areas, a dynamic category color system, a live Customizer design panel, and dedicated page templates to give your site a distinct, modern look while maintaining the robust structural foundation of its parent.
 
 ## Features
 
 - **Vibrant Color System**: Replaces the parent theme's default colors with a striking modern palette (`#E34A6F` primary, `#279D9F` secondary, dark accents, and warm highlights), built on a full CSS custom property token system for easy customisation.
-- **Category Color System**: Assign individual colors to each category directly from the Customizer. Colors are applied via CSS variables (`--cat-color`) and can be selectively targeted to card borders, post titles, and Read More links.
+- **Customizer Design Panel**: A dedicated **Theme Design** panel in the WordPress Customizer groups all visual configuration in one place, with sub-sections for Bootstrap Palette, Typography, Category Colors, and Category Color Application.
+- **Live Bootstrap Palette Overrides**: Override Bootstrap core CSS variables (`--bs-primary`, `--bs-secondary`, `--bs-body-bg`, `--bs-body-color`, `--bs-heading-color`, `--color-accent`) directly from the Customizer without writing any CSS.
+- **Typography Font Picker**: Choose Google/Bunny Fonts independently for body text, headings H1–H3, and headings H4–H6. Selected fonts are loaded from [Bunny Fonts](https://fonts.bunny.net) (a privacy-friendly alternative to Google Fonts) and applied via CSS custom properties (`--font-body`, `--font-heading-main`, `--font-heading-sub`).
+- **Category Color System**: Assign individual colors to each category directly from the Customizer. Colors are output as scoped CSS variables on `.post-card.primary-cat-{slug}` elements and can be selectively targeted to card borders, post titles, and Read More links.
 - **Alternating Post Layout**: Archive, search, and home loop views automatically alternate between `layout-left` and `layout-right` post card arrangements for a dynamic, magazine-style appearance on wider screens.
-- **Post Card Layout**: Post list views use a two-column card layout — thumbnail on one side, excerpt and Read More link on the other — using Bootstrap's responsive grid (`col-12 / col-sm-5` + `col-sm-7`).
+- **Post Card Layout**: Post list views use a two-column card layout — thumbnail on one side, excerpt and Read More link on the other — responsive stack on mobile, side-by-side on `sm+` breakpoint.
 - **Sticky Post Indicator**: Sticky posts are marked with a 📌 pin icon appended to the post title in loop views.
 - **Custom Page Templates**: Includes built-in "No Title" templates for both default layout with sidebar and full-width layout, perfect for landing pages and homepages.
 - **Enhanced Footer Layout**: A 3-column widgetized footer area (`Footer Column 1, 2, and 3`) spanning full width with dedicated styling.
@@ -41,7 +44,23 @@ wp theme install https://github.com/ElisabettaCarrara/aestazia-child/releases/la
 
 ## Setup & Configuration
 
-Once activated, you can begin configuring the theme:
+Once activated, navigate to **Appearance > Customize** and open the **Theme Design** panel to access all visual settings.
+
+### Bootstrap Palette
+To override the site's core colors:
+1. Navigate to **Appearance > Customize > Theme Design > Bootstrap Palette**.
+2. Use the color pickers to set values for **Primary Color**, **Secondary Color**, **Body Background**, **Body Text**, **Heading Color**, and **Accent Color**.
+3. Changes are applied immediately as CSS custom properties in `:root` via an inline `<style id="aestazia-design-system">` block injected into `wp_head`.
+4. Click **Publish**.
+
+Leaving any picker empty preserves the default value defined in `style.css`.
+
+### Typography
+To change the fonts used across the site:
+1. Navigate to **Appearance > Customize > Theme Design > Typography**.
+2. Select a font for **Body Font**, **Headings H1–H3**, and **Headings H4–H6** from the dropdown. Available choices: *Inter*, *Roboto*, *Lora*, *Playfair Display*, *Poppins*, *Montserrat*, or **Default (Theme)**.
+3. Selected fonts are loaded automatically from [Bunny Fonts](https://fonts.bunny.net) and applied via `--font-body`, `--font-heading-main`, and `--font-heading-sub` CSS custom properties.
+4. Click **Publish**.
 
 ### Footer Widgets
 To use the 3-column footer:
@@ -50,12 +69,12 @@ To use the 3-column footer:
 
 ### Category Colors
 To assign colors to categories:
-1. Navigate to **Appearance > Customize**.
-2. Open the **Category Colors** section and pick a color for each category.
-3. Open the **Category Color Application** section and check which elements the color should be applied to: **Card Border**, **Post Title**, and/or **Read More Link**.
+1. Navigate to **Appearance > Customize > Theme Design > Category Colors**.
+2. Pick a color for each category listed.
+3. Open **Theme Design > Category Color Application** and check which elements the color should be applied to: **Card Border**, **Post Title**, and/or **Read More Link**.
 4. Click **Publish**.
 
-Colors are output as the CSS variable `--cat-color` on each post's article element (via the `primary-cat-{slug}` class), so they can also be referenced in custom CSS rules.
+Colors are output as scoped CSS variables (e.g. `--post-card-border`, `--bs-link-color`, `--bs-btn-bg`) on `.post-card.primary-cat-{slug}` selectors. The `primary-cat-{slug}` class is injected automatically on each post's `<article>` element by the `post_class` filter in `functions.php`, using the first assigned category as the primary one.
 
 ### Page Templates
 To hide the page title on specific pages:
@@ -71,7 +90,9 @@ Contributions and bug reports are welcome! If you would like to contribute:
 2. Create a new branch for your feature or bugfix.
 3. Submit a Pull Request.
 
-Please ensure any changes pass the ClassicPress Coding Standards (CPCS). Checks run automatically on every commit via GitHub Actions.
+Please ensure any changes pass the ClassicPress Coding Standards (CPCS). Checks run automatically on every commit via GitHub Actions. A CPCS summary is appended to the GitHub Actions step summary for each run.
+
+On every published release, a GitHub Actions workflow automatically packages the theme into an installable `aestazia-child-{version}.zip` and attaches it to the release as a downloadable asset.
 
 ## License
 
