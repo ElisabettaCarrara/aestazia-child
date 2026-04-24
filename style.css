@@ -19,52 +19,47 @@ Copyright (C) 2026 Elisabetta Carrara.
 Aestazia Child ClassicPress Theme is licensed under the GPL v2 or later. Use it to make something cool, have fun, and share what you've learned with others.
 */
 
+/*
+Theme Name: Aestazia Child
+...
+*/
+
 /* =========================
-   1. DESIGN TOKENS + BOOTSTRAP BRIDGE
+   1. DESIGN TOKENS (BOOTSTRAP-DRIVEN)
    ========================= */
 
 :root {
 
-  /* === Core Tokens (fallback / defaults) === */
-  --color-primary: #E34A6F;
-  --color-primary-dark: #c63c5f;
+  /* === Bootstrap Core (fallback defaults) === */
+  --bs-primary: #E34A6F;
+  --bs-secondary: #279D9F;
 
-  --color-secondary: #279D9F;
-  --color-secondary-dark: #1f7f81;
+  --bs-body-bg: #ffffff;
+  --bs-body-color: #5B5B5B;
 
-  --color-accent: #FEC3A6;
-
-  --color-dark: #423E3B;
-  --color-text: #5B5B5B;
-  --color-light: #DEFFFC;
-  --color-white: #ffffff;
-
-  /* === Bootstrap Mapping (Customizer will override these) === */
-  --bs-primary: var(--color-primary);
-  --bs-secondary: var(--color-secondary);
-
-  --bs-body-bg: var(--color-white);
-  --bs-body-color: var(--color-text);
+  --bs-heading-color: #423E3B;
 
   --bs-border-color: rgba(0,0,0,0.1);
 
-  --bs-link-color: var(--color-secondary);
-  --bs-link-hover-color: var(--color-primary);
-
-  --bs-heading-color: var(--color-dark);
+  --bs-link-color: var(--bs-secondary);
+  --bs-link-hover-color: var(--bs-primary);
 
   /* Buttons */
-  --bs-btn-bg: var(--color-primary);
-  --bs-btn-border-color: var(--color-primary);
-  --bs-btn-hover-bg: var(--color-primary-dark);
-  --bs-btn-hover-border-color: var(--color-primary-dark);
+  --bs-btn-bg: var(--bs-primary);
+  --bs-btn-border-color: var(--bs-primary);
+  --bs-btn-hover-bg: #c63c5f;
+  --bs-btn-hover-border-color: #c63c5f;
   --bs-btn-color: #ffffff;
+
+  /* === Non-Bootstrap semantic tokens === */
+  --color-accent: #FEC3A6;
+  --color-light: #DEFFFC;
 
   /* Effects */
   --focus-ring-primary: rgba(227, 74, 111, 0.5);
   --focus-ring-secondary: rgba(39, 157, 159, 0.5);
 
-  /* Post Card Tokens */
+  /* Post Card */
   --post-card-radius: 5px;
   --post-card-border: var(--bs-border-color);
   --post-card-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
@@ -78,10 +73,17 @@ Aestazia Child ClassicPress Theme is licensed under the GPL v2 or later. Use it 
 body {
   color: var(--bs-body-color);
   background: var(--bs-body-bg);
+  font-family: var(--font-body, inherit);
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1, h2, h3 {
   color: var(--bs-heading-color);
+  font-family: var(--font-heading-main, inherit);
+}
+
+h4, h5, h6 {
+  color: var(--bs-heading-color);
+  font-family: var(--font-heading-sub, inherit);
 }
 
 
@@ -102,7 +104,7 @@ a:focus {
 
 
 /* =========================
-   4. BUTTONS (Bootstrap-aligned)
+   4. BUTTONS
    ========================= */
 
 .btn-primary {
@@ -127,8 +129,7 @@ a:focus {
 }
 
 .btn-secondary:hover {
-  background-color: var(--color-secondary-dark);
-  border-color: var(--color-secondary-dark);
+  filter: brightness(0.9);
 }
 
 .btn-secondary:focus {
@@ -171,7 +172,6 @@ a:focus {
   box-shadow: 0 6px 14px rgba(0,0,0,0.08);
 }
 
-/* Internal media */
 .post-card img {
   border-radius: calc(var(--post-card-radius) - 2px);
   margin-bottom: 15px;
@@ -186,24 +186,15 @@ a:focus {
   color: var(--bs-primary);
 }
 
-/* Read more (button-ready) */
+/* Read more */
 .read-more {
   margin-top: 10px;
 }
 
 
 /* =========================
-   7. CATEGORY-DRIVEN STYLING (HOOKS ONLY)
+   7. CATEGORY SYSTEM (SCOPED)
    ========================= */
-
-/*
-  PHP will inject something like:
-
-  .post-card.primary-cat-wedding {
-    --bs-primary: #D4A5A5;
-    --post-card-border: #D4A5A5;
-  }
-*/
 
 .post-card[class*="primary-cat-"] {
   border-color: var(--post-card-border, var(--bs-border-color));
@@ -216,7 +207,8 @@ a:focus {
 
 .entry-meta {
   font-size: 0.9rem;
-  color: var(--color-text);
+  color: var(--bs-body-color);
+  opacity: 0.8;
 }
 
 
@@ -242,7 +234,7 @@ a:focus {
 .badge,
 .tagcloud a {
   background: var(--color-accent);
-  color: var(--color-dark);
+  color: var(--bs-heading-color);
   padding: 4px 8px;
   border-radius: 4px;
 }
@@ -314,7 +306,7 @@ code {
 }
 
 .search-form .search-submit:hover {
-  background: var(--color-primary-dark);
+  filter: brightness(0.9);
 }
 
 
@@ -332,13 +324,13 @@ code {
    ========================= */
 
 .site-footer {
-  background: var(--color-dark);
-  color: var(--color-light);
+  background: var(--bs-heading-color);
+  color: var(--bs-body-bg);
   padding: 40px 0 20px;
 }
 
 .site-footer a {
-  color: var(--color-light);
+  color: var(--bs-body-bg);
 }
 
 .site-footer a:hover {
@@ -395,4 +387,3 @@ code {
     flex: 1;
   }
 }
-
