@@ -153,44 +153,50 @@ a:focus {
 /* =========================
    6. POST CARD COMPONENT
    ========================= */
-
-.post-card,
-.hentry,
-.type-post {
+ 
+/*
+ * Only .post-card is targeted here.
+ * .hentry and .type-post have been removed — they would accidentally
+ * style page templates (content-page.php etc.) which are not cards.
+ */
+.post-card {
   border: 1px solid var(--post-card-border);
-  border-radius: var(--post-card-radius);
-  padding: 25px;
-  margin-bottom: 30px;
+  border-radius: var(--post-card-radius);   /* --post-card-radius: 5px (already in :root) */
+  padding: 10px;
+  margin: 10px;
   background-color: var(--bs-body-bg);
   box-shadow: var(--post-card-shadow);
   overflow: hidden;
-  transition: all 0.2s ease;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
 }
-
+ 
 .post-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 14px rgba(0,0,0,0.08);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
 }
-
-.post-card img {
+ 
+/* Thumbnail inside card — no extra margin; gap is handled by ps-3 on .post-content */
+.post-card .post-thumb img {
+  display: block;
+  width: 100%;
+  height: auto;
   border-radius: calc(var(--post-card-radius) - 2px);
-  margin-bottom: 15px;
+  object-fit: cover;
 }
-
-/* Titles */
+ 
+/* Title link */
 .post-card .entry-title a {
   color: var(--bs-link-color);
 }
-
+ 
 .post-card .entry-title a:hover {
   color: var(--bs-primary);
 }
-
-/* Read more */
+ 
+/* Read More button row */
 .read-more {
-  margin-top: 10px;
+  display: inline-block;
 }
-
 
 /* =========================
    7. CATEGORY SYSTEM (SCOPED)
@@ -361,29 +367,60 @@ code {
 /* =========================
    18. ALTERNATE POST LAYOUTS
    ========================= */
-
+ 
+/*
+ * .post-card-inner is the flex container inside every .post-card.
+ * layout-left / layout-right classes are added to the <article> by
+ * the post_class filter in functions.php.
+ *
+ * On mobile (< 576 px) the thumbnail stacks above the text.
+ * On sm+ the two-column side-by-side layout kicks in.
+ */
+ 
+/* --- Mobile: stack vertically -------------------------------- */
+.post-card-inner {
+  flex-wrap: wrap;        /* allow stacking on narrow viewports */
+}
+ 
+.post-thumb {
+  width: 100%;            /* full width on mobile */
+}
+ 
+.post-content {
+  width: 100%;            /* full width on mobile */
+  padding-left: 0 !important;   /* cancel ps-3 on mobile */
+}
+ 
+/* --- sm and up: side-by-side --------------------------------- */
 @media (min-width: 576px) {
-
-  .layout-left .post-card,
-  .layout-right .post-card {
-    display: flex;
-    align-items: center;
-    gap: 20px;
+ 
+  .post-card-inner {
+    flex-wrap: nowrap;
   }
-
-  .layout-left .post-card {
+ 
+  /* Left layout: thumbnail | content */
+  .layout-left .post-card-inner {
     flex-direction: row;
   }
-
-  .layout-right .post-card {
+ 
+  /* Right layout: content | thumbnail */
+  .layout-right .post-card-inner {
     flex-direction: row-reverse;
   }
-
+ 
+  /* Thumbnail column: fixed 40 % width */
   .post-thumb {
-    flex: 0 0 40%;
+    width: 40%;
   }
-
+ 
+  /* Content column */
   .post-content {
-    flex: 1;
+    padding-left: 10px !important;  /* restore the Bootstrap ps-3 equivalent on left layout */
   }
+ 
+  /* For row-reverse the start/end sides swap, so flip the padding */
+  .layout-right .post-content {
+    padding-left: 0 !important;
+    padding-right: 10px;
+    }
 }
