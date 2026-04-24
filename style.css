@@ -20,94 +20,110 @@ Aestazia Child ClassicPress Theme is licensed under the GPL v2 or later. Use it 
 */
 
 /* =========================
-   THEME TOKENS (SKIN SYSTEM)
+   1. DESIGN TOKENS + BOOTSTRAP BRIDGE
    ========================= */
 
 :root {
 
-  /* Brand */
+  /* === Core Tokens (fallback / defaults) === */
   --color-primary: #E34A6F;
   --color-primary-dark: #c63c5f;
 
   --color-secondary: #279D9F;
   --color-secondary-dark: #1f7f81;
 
-  /* Neutrals */
+  --color-accent: #FEC3A6;
+
   --color-dark: #423E3B;
   --color-text: #5B5B5B;
   --color-light: #DEFFFC;
   --color-white: #ffffff;
 
-  /* Accent */
-  --color-accent: #FEC3A6;
+  /* === Bootstrap Mapping (Customizer will override these) === */
+  --bs-primary: var(--color-primary);
+  --bs-secondary: var(--color-secondary);
 
-  /* UI roles */
-  --body-bg: var(--color-white);
-  --body-text: var(--color-text);
+  --bs-body-bg: var(--color-white);
+  --bs-body-color: var(--color-text);
+
+  --bs-border-color: rgba(0,0,0,0.1);
+
+  --bs-link-color: var(--color-secondary);
+  --bs-link-hover-color: var(--color-primary);
+
+  --bs-heading-color: var(--color-dark);
+
+  /* Buttons */
+  --bs-btn-bg: var(--color-primary);
+  --bs-btn-border-color: var(--color-primary);
+  --bs-btn-hover-bg: var(--color-primary-dark);
+  --bs-btn-hover-border-color: var(--color-primary-dark);
+  --bs-btn-color: #ffffff;
 
   /* Effects */
   --focus-ring-primary: rgba(227, 74, 111, 0.5);
   --focus-ring-secondary: rgba(39, 157, 159, 0.5);
+
+  /* Post Card Tokens */
+  --post-card-radius: 5px;
+  --post-card-border: var(--bs-border-color);
+  --post-card-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
 }
 
+
 /* =========================
-   BASE TYPOGRAPHY
+   2. BASE TYPOGRAPHY
    ========================= */
 
 body {
-  color: var(--body-text);
-  background: var(--body-bg);
+  color: var(--bs-body-color);
+  background: var(--bs-body-bg);
 }
 
 h1, h2, h3, h4, h5, h6 {
-  color: var(--color-dark);
+  color: var(--bs-heading-color);
 }
 
+
 /* =========================
-   LINKS
+   3. LINKS
    ========================= */
 
 a {
-  color: var(--color-secondary);
+  color: var(--bs-link-color);
   text-decoration: none;
 }
 
 a:hover,
 a:focus {
-  color: var(--color-primary);
+  color: var(--bs-link-hover-color);
   text-decoration: underline;
 }
 
+
 /* =========================
-   BUTTONS
+   4. BUTTONS (Bootstrap-aligned)
    ========================= */
 
 .btn-primary {
-  background-color: var(--color-primary);
-  border-color: var(--color-primary);
+  background-color: var(--bs-btn-bg);
+  border-color: var(--bs-btn-border-color);
+  color: var(--bs-btn-color);
 }
 
 .btn-primary:hover {
-  background-color: var(--color-primary-dark);
-  border-color: var(--color-primary-dark);
+  background-color: var(--bs-btn-hover-bg);
+  border-color: var(--bs-btn-hover-border-color);
 }
 
-.btn-primary:focus,
-.btn-primary.focus {
-  box-shadow: 0 0 0 0.25rem var(--focus-ring-primary);
-}
-
-.btn-primary:active,
-.btn-primary.active,
-.btn-primary:active:focus {
-  background-color: var(--color-primary-dark);
-  border-color: var(--color-primary-dark);
+.btn-primary:focus {
   box-shadow: 0 0 0 0.25rem var(--focus-ring-primary);
 }
 
 .btn-secondary {
-  background-color: var(--color-secondary);
-  border-color: var(--color-secondary);
+  background-color: var(--bs-secondary);
+  border-color: var(--bs-secondary);
+  color: #fff;
 }
 
 .btn-secondary:hover {
@@ -115,45 +131,87 @@ a:focus {
   border-color: var(--color-secondary-dark);
 }
 
-.btn-secondary:focus,
-.btn-secondary.focus {
+.btn-secondary:focus {
   box-shadow: 0 0 0 0.25rem var(--focus-ring-secondary);
 }
 
-.btn-secondary:active,
-.btn-secondary.active,
-.btn-secondary:active:focus {
-  background-color: var(--color-secondary-dark);
-  border-color: var(--color-secondary-dark);
-  box-shadow: 0 0 0 0.25rem var(--focus-ring-secondary);
-}
 
 /* =========================
-   NAVBAR
+   5. NAVBAR
    ========================= */
 
 .navbar {
-  border-bottom: 3px solid var(--color-primary);
+  border-bottom: 3px solid var(--bs-primary);
 }
 
 .navbar a:hover {
-  color: var(--color-primary);
+  color: var(--bs-primary);
 }
 
+
 /* =========================
-   POSTS
+   6. POST CARD COMPONENT
    ========================= */
 
-.entry-title a {
-  color: var(--color-dark);
+.post-card,
+.hentry,
+.type-post {
+  border: 1px solid var(--post-card-border);
+  border-radius: var(--post-card-radius);
+  padding: 25px;
+  margin-bottom: 30px;
+  background-color: var(--bs-body-bg);
+  box-shadow: var(--post-card-shadow);
+  overflow: hidden;
+  transition: all 0.2s ease;
 }
 
-.entry-title a:hover {
-  color: var(--color-primary);
+.post-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.08);
 }
+
+/* Internal media */
+.post-card img {
+  border-radius: calc(var(--post-card-radius) - 2px);
+  margin-bottom: 15px;
+}
+
+/* Titles */
+.post-card .entry-title a {
+  color: var(--bs-link-color);
+}
+
+.post-card .entry-title a:hover {
+  color: var(--bs-primary);
+}
+
+/* Read more (button-ready) */
+.read-more {
+  margin-top: 10px;
+}
+
 
 /* =========================
-   META
+   7. CATEGORY-DRIVEN STYLING (HOOKS ONLY)
+   ========================= */
+
+/*
+  PHP will inject something like:
+
+  .post-card.primary-cat-wedding {
+    --bs-primary: #D4A5A5;
+    --post-card-border: #D4A5A5;
+  }
+*/
+
+.post-card[class*="primary-cat-"] {
+  border-color: var(--post-card-border, var(--bs-border-color));
+}
+
+
+/* =========================
+   8. META
    ========================= */
 
 .entry-meta {
@@ -161,8 +219,9 @@ a:focus {
   color: var(--color-text);
 }
 
+
 /* =========================
-   SIDEBAR
+   9. SIDEBAR
    ========================= */
 
 .widget {
@@ -172,11 +231,12 @@ a:focus {
 }
 
 .widget-title {
-  color: var(--color-dark);
+  color: var(--bs-heading-color);
 }
 
+
 /* =========================
-   TAGS / BADGES
+   10. TAGS / BADGES
    ========================= */
 
 .badge,
@@ -188,22 +248,24 @@ a:focus {
 }
 
 .tagcloud a:hover {
-  background: var(--color-primary);
-  color: var(--color-white);
+  background: var(--bs-primary);
+  color: #fff;
 }
 
+
 /* =========================
-   BLOCKQUOTES
+   11. BLOCKQUOTES
    ========================= */
 
 blockquote {
-  border-left: 4px solid var(--color-primary);
+  border-left: 4px solid var(--bs-primary);
   padding-left: 1rem;
-  color: var(--color-dark);
+  color: var(--bs-heading-color);
 }
 
+
 /* =========================
-   CODE
+   12. CODE
    ========================= */
 
 pre,
@@ -213,25 +275,27 @@ code {
   border-radius: 3px;
 }
 
+
 /* =========================
-   PAGINATION
+   13. PAGINATION
    ========================= */
 
 .page-link {
-  color: var(--color-secondary);
+  color: var(--bs-link-color);
 }
 
 .page-link:hover {
-  color: var(--color-primary);
+  color: var(--bs-link-hover-color);
 }
 
 .page-item.active .page-link {
-  background: var(--color-primary);
-  border-color: var(--color-primary);
+  background: var(--bs-primary);
+  border-color: var(--bs-primary);
 }
 
+
 /* =========================
-   COMMENTS
+   14. COMMENTS
    ========================= */
 
 .comment-body {
@@ -239,30 +303,32 @@ code {
   padding-top: 1rem;
 }
 
+
 /* =========================
-   SEARCH
+   15. SEARCH
    ========================= */
 
 .search-form .search-submit {
-  background: var(--color-primary);
-  border-color: var(--color-primary);
+  background: var(--bs-primary);
+  border-color: var(--bs-primary);
 }
 
 .search-form .search-submit:hover {
   background: var(--color-primary-dark);
 }
 
+
 /* =========================
-   HEADER
+   16. HEADER
    ========================= */
 
 .site-branding img {
-  padding-top: 20px;
-  padding-bottom: 20px;
+  padding: 20px 0;
 }
 
+
 /* =========================
-   FOOTER (DEDUPED + FINAL)
+   17. FOOTER
    ========================= */
 
 .site-footer {
@@ -276,7 +342,7 @@ code {
 }
 
 .site-footer a:hover {
-  color: var(--color-primary);
+  color: var(--bs-primary);
 }
 
 .footer-widget-title {
@@ -299,54 +365,34 @@ code {
   font-size: 0.9rem;
 }
 
+
 /* =========================
-   LAYOUT HELPERS
+   18. ALTERNATE POST LAYOUTS
    ========================= */
 
 @media (min-width: 576px) {
 
-  .layout-left .post-thumb {
-    order: 1;
+  .layout-left .post-card,
+  .layout-right .post-card {
+    display: flex;
+    align-items: center;
+    gap: 20px;
   }
 
-  .layout-left .post-content {
-    order: 2;
+  .layout-left .post-card {
+    flex-direction: row;
   }
 
-  .layout-right .post-thumb {
-    order: 2;
+  .layout-right .post-card {
+    flex-direction: row-reverse;
   }
 
-  .layout-right .post-content {
-    order: 1;
+  .post-thumb {
+    flex: 0 0 40%;
+  }
+
+  .post-content {
+    flex: 1;
   }
 }
 
-/* Post Card Styling */
-.hentry, 
-.type-post {
-    /* 1. Add the border on all four sides */
-    border: 1px solid #e0e0e0; 
-    
-    /* 2. Rounded corners */
-    border-radius: 12px;
-    
-    /* 3. Padding inside the card so text doesn't touch the border */
-    padding: 25px;
-    
-    /* 4. Spacing between cards */
-    margin-bottom: 30px;
-    
-    /* Optional: Subtle shadow to match the modern look in your image */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-    
-    /* Ensure background is clean */
-    background-color: #ffffff;
-    overflow: hidden; 
-}
-
-/* Ensure images inside the card don't have weird spacing */
-.hentry img {
-    border-radius: 8px; /* Slightly smaller radius for internal elements */
-    margin-bottom: 15px;
-}
