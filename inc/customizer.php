@@ -8,6 +8,75 @@
  */
 
 /**
+ * Fetch the full list of font families available on Bunny Fonts.
+ *
+ * Results are cached in a transient for 7 days to avoid an HTTP request
+ * on every Customizer page load. Falls back to a small built-in list if
+ * the remote request fails.
+ *
+ * @return array Associative array of 'Font Name' => 'Font Name' (plus '' => 'Default').
+ */
+function aestazia_child_get_bunny_font_choices() {
+	$transient_key = 'aestazia_bunny_fonts_v1';
+	$cached        = get_transient( $transient_key );
+
+	if ( false !== $cached ) {
+		return $cached;
+	}
+
+	$response = wp_remote_get(
+		'https://fonts.bunny.net/list',
+		array(
+			'timeout'    => 5,
+			'user-agent' => 'WordPress/' . get_bloginfo( 'version' ) . '; ' . get_bloginfo( 'url' ),
+		)
+	);
+
+	$choices = array(
+		'' => esc_html__( 'Default (Theme)', 'aestazia-child' ),
+	);
+
+	if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) ) {
+		$body = wp_remote_retrieve_body( $response );
+		$data = json_decode( $body, true );
+
+		if ( is_array( $data ) ) {
+			foreach ( $data as $slug => $meta ) {
+				// The API returns an object keyed by slug; the display name may be
+				// in $meta['family'] or we can title-case the slug as fallback.
+				if ( isset( $meta['family'] ) && '' !== $meta['family'] ) {
+					$name = sanitize_text_field( $meta['family'] );
+				} else {
+					// Convert slug 'open-sans' → 'Open Sans' as a readable fallback.
+					$name = ucwords( str_replace( '-', ' ', sanitize_key( $slug ) ) );
+				}
+				$choices[ $name ] = $name;
+			}
+			asort( $choices ); // Alphabetical, keeping '' first is fine since it has no letter.
+		}
+	}
+
+	// If we only have the default entry the request failed — use the built-in fallback
+	// and cache for only 1 hour so we retry sooner.
+	if ( count( $choices ) <= 1 ) {
+		$choices = array(
+			''                 => esc_html__( 'Default (Theme)', 'aestazia-child' ),
+			'Inter'            => 'Inter',
+			'Lora'             => 'Lora',
+			'Montserrat'       => 'Montserrat',
+			'Playfair Display' => 'Playfair Display',
+			'Poppins'          => 'Poppins',
+			'Roboto'           => 'Roboto',
+		);
+		set_transient( $transient_key, $choices, HOUR_IN_SECONDS );
+		return $choices;
+	}
+
+	set_transient( $transient_key, $choices, WEEK_IN_SECONDS );
+	return $choices;
+}
+
+/**
  * Register all Customizer settings, sections, and panels.
  *
  * @param WP_Customize_Manager $wp_customize Customizer object.
@@ -79,15 +148,8 @@ function aestazia_child_customize_register( $wp_customize ) {
 		)
 	);
 
-	$font_choices = array(
-		''                 => esc_html__( 'Default (Theme)', 'aestazia-child' ),
-		'Inter'            => 'Inter',
-		'Roboto'           => 'Roboto',
-		'Lora'             => 'Lora',
-		'Playfair Display' => 'Playfair Display',
-		'Poppins'          => 'Poppins',
-		'Montserrat'       => 'Montserrat',
-	);
+	// Full Bunny Fonts list (cached).
+	$font_choices = aestazia_child_get_bunny_font_choices();
 
 	$font_settings = array(
 		'body'    => esc_html__( 'Body Font', 'aestazia-child' ),
@@ -196,17 +258,23 @@ add_action( 'customize_register', 'aestazia_child_customize_register' );
 /**
  * Sanitize font selection.
  *
- * @param string $value The selected font.
- * @return string Validated font name.
+ * Validates the submitted value against the current Bunny Fonts list
+ * (from the transient cache). Falls back to '' if the value is not found.
+ *
+ * @param string $value The selected font name.
+ * @return string Validated font name or empty string.
  */
 function aestazia_child_sanitize_fonts( $value ) {
-	$valid_fonts = array( '', 'Inter', 'Roboto', 'Lora', 'Playfair Display', 'Poppins', 'Montserrat' );
-	return in_array( $value, $valid_fonts, true ) ? $value : '';
+	if ( '' === $value ) {
+		return '';
+	}
+	$valid_fonts = aestazia_child_get_bunny_font_choices();
+	return array_key_exists( $value, $valid_fonts ) ? sanitize_text_field( $value ) : '';
 }
 
 /**
  * Output Dynamic CSS in wp_head.
- * * Corrected to satisfy WPCS OutputEscaping requirements.
+ * Corrected to satisfy WPCS OutputEscaping requirements.
  */
 function aestazia_child_render_custom_css() {
 	$root_vars     = array();
@@ -304,7 +372,7 @@ function aestazia_child_render_custom_css() {
 
 	/**
 	 * WPCS Fix: Clean the string and echo with esc_html.
-	 * Even though it's CSS, using esc_html on the final sanitized block 
+	 * Even though it's CSS, using esc_html on the final sanitized block
 	 * satisfies the 'OutputNotEscaped' sniff for most PHPCS configurations.
 	 */
 	echo '<style id="aestazia-design-system">';
@@ -314,7 +382,7 @@ function aestazia_child_render_custom_css() {
 add_action( 'wp_head', 'aestazia_child_render_custom_css' );
 
 /**
- * Enqueue Google/Bunny Fonts based on Customizer selection.
+ * Enqueue Bunny Fonts based on Customizer selection.
  */
 function aestazia_child_enqueue_custom_fonts() {
 	$fonts = array(
