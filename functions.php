@@ -97,23 +97,27 @@ add_filter('post_class', function ($classes) {
 
 
 /**
- * Add primary category class to posts
- *
- * This ensures ONE deterministic category color per post.
- * Output example:
- * - primary-cat-news
+ * Add primary category and layout classes to posts.
+ * Fixed: Now injects 'primary-cat-{slug}' for the color system.
  */
-add_filter('post_class', function ($classes) {
+function aestazia_child_post_classes( $classes ) {
+	if ( is_home() || is_archive() || is_search() || is_singular() ) {
+		global $wp_query;
 
-    if (is_singular() || is_home() || is_archive() || is_search()) {
+		// 1. Alternating Layout Logic.
+		if ( isset( $wp_query->current_post ) && $wp_query->in_the_loop ) {
+			$classes[] = ( $wp_query->current_post % 2 === 0 ) ? 'layout-left' : 'layout-right'; [cite: 116]
+		}
 
-        $categories = get_the_category();
+		// 2. Category Color Logic (The "Missing" Piece).
+		$categories = get_the_category();
+		if ( ! empty( $categories ) ) {
+			// We take the first category as the "Primary" one for styling purposes.
+			$primary_cat = $categories[0];
+			$classes[]   = 'primary-cat-' . sanitize_html_class( $primary_cat->slug );
+		}
+	}
 
-        if (!empty($categories)) {
-            $primary = $categories[0]; // Basic primary category logic
-            $classes[] = 'primary-cat-' . sanitize_html_class($primary->slug);
-        }
-    }
-
-    return $classes;
-});
+	return $classes;
+}
+add_filter( 'post_class', 'aestazia_child_post_classes' );
