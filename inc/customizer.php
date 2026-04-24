@@ -170,7 +170,7 @@ add_action('customize_register', function ($wp_customize) {
  */
 add_action('wp_head', function () {
 
-    $root_vars = [];
+    $root_vars    = [];
     $scoped_blocks = [];
 
     /**
@@ -213,6 +213,20 @@ add_action('wp_head', function () {
 
     /**
      * CATEGORY SYSTEM
+     *
+     * Rules are split into three separate scoped blocks per category:
+     *
+     * 1. Card-level block  (.post-card.primary-cat-{slug})
+     *    - --post-card-border  → consumed by the card's own border declaration
+     *    - --bs-link-color     → inherited by descendant <a> elements (title link)
+     *
+     * 2. Button block  (.post-card.primary-cat-{slug} .btn-primary)
+     *    - --bs-btn-bg / --bs-btn-border-color / --bs-btn-color
+     *    WHY a separate block: Bootstrap 5.2+ defines these variables LOCALLY on
+     *    .btn-primary, so an inherited value from an ancestor is silently ignored.
+     *    By setting them on ".post-card.primary-cat-{slug} .btn-primary" we use a
+     *    higher-specificity selector (0,3,0) that beats Bootstrap's own (0,1,0),
+     *    ensuring the category colour reaches the button.
      */
     $categories = get_categories(['hide_empty' => false]);
 
@@ -225,26 +239,40 @@ add_action('wp_head', function () {
         $color = sanitize_hex_color($color);
         $slug  = sanitize_html_class($cat->slug);
 
-        $selector = ".post-card.primary-cat-$slug";
+        $card_selector = ".post-card.primary-cat-$slug";
+        $btn_selector  = ".post-card.primary-cat-$slug .btn-primary";
 
-        $rules = [];
+        $card_rules = [];
+        $btn_rules  = [];
 
-        if (get_theme_mod('cat_color_apply_title')) {
-            $rules[] = "--bs-link-color: $color";
-        }
-
-        if (get_theme_mod('cat_color_apply_read_more')) {
-            $rules[] = "--bs-btn-bg: $color";
-            $rules[] = "--bs-btn-border-color: $color";
-            $rules[] = "--bs-btn-color: #fff";
-        }
-
+        // --- Card border ---
         if (get_theme_mod('cat_color_apply_card_border')) {
-            $rules[] = "--post-card-border: $color";
+            $card_rules[] = "--post-card-border: $color";
         }
 
-        if (!empty($rules)) {
-            $scoped_blocks[] = "$selector { " . implode('; ', $rules) . "; }";
+        // --- Title link colour (inherited by .entry-title a via CSS custom property cascade) ---
+        if (get_theme_mod('cat_color_apply_title')) {
+            $card_rules[] = "--bs-link-color: $color";
+        }
+
+        // --- Read More button ---
+        // Must target .btn-primary directly; Bootstrap 5.2+ defines component variables
+        // on the element itself, which beats anything set on an ancestor.
+        if (get_theme_mod('cat_color_apply_read_more')) {
+            $btn_rules[] = "--bs-btn-bg: $color";
+            $btn_rules[] = "--bs-btn-border-color: $color";
+            $btn_rules[] = "--bs-btn-color: #fff";
+            // Also override hover so Bootstrap's default hover doesn't bleed through
+            $btn_rules[] = "--bs-btn-hover-bg: $color";
+            $btn_rules[] = "--bs-btn-hover-border-color: $color";
+        }
+
+        if (!empty($card_rules)) {
+            $scoped_blocks[] = "$card_selector { " . implode('; ', $card_rules) . "; }";
+        }
+
+        if (!empty($btn_rules)) {
+            $scoped_blocks[] = "$btn_selector { " . implode('; ', $btn_rules) . "; }";
         }
     }
 
