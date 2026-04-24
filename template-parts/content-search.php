@@ -22,16 +22,31 @@
 				<?php the_title( sprintf( '<h2 class="entry-title mb-0"><a href="%s" rel="bookmark">', esc_url( get_permalink() ) ), '</a></h2>' ); ?>
 
 				<?php if ( 'post' === get_post_type() ) : ?>
-					<div class="entry-meta small text-muted">
+					<div class="entry-meta small text-muted mt-1">
 						<?php
+						// Author and Date
 						aestazia_posted_on();
 						aestazia_posted_by();
+						
+						// Categories
+						$categories_list = get_the_category_list( esc_html__( ', ', 'aestazia-child' ) );
+						if ( $categories_list ) {
+							// Using 'ms-2' (margin-start) Bootstrap class to add a small gap after the date/author
+							printf( '<span class="cat-links ms-2">%s</span>', $categories_list ); 
+						}
+
+						// Tags
+						$tags_list = get_the_tag_list( '', esc_html__( ', ', 'aestazia-child' ) );
+						if ( $tags_list ) {
+							// Using 'ms-2' Bootstrap class to add a small gap after the categories
+							printf( '<span class="tags-links ms-2">%s</span>', $tags_list );
+						}
 						?>
 					</div><!-- .entry-meta -->
 				<?php endif; ?>
 			</header><!-- .entry-header -->
 
-			<div class="entry-summary">
+			<div class="entry-summary mt-2">
 				<?php the_excerpt(); ?>
 			</div><!-- .entry-summary -->
 
@@ -42,9 +57,5 @@
 		</div><!-- .post-content -->
 
 	</div><!-- .post-card-inner -->
-
-	<footer class="entry-footer mt-2 pt-2 border-top">
-		<?php aestazia_entry_footer(); ?>
-	</footer><!-- .entry-footer -->
 
 </article><!-- #post-<?php the_ID(); ?> -->
