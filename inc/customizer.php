@@ -1,3 +1,4 @@
+<?php
 /**
  * Register Customizer settings for category colors and element application
  */
@@ -34,7 +35,6 @@ add_action('customize_register', function ($wp_customize) {
         ));
     }
 
-
     /**
      * Section: Category Color Application
      */
@@ -67,7 +67,6 @@ add_action('customize_register', function ($wp_customize) {
 
 });
 
-
 /**
  * Output dynamic CSS for category colors
  *
@@ -87,32 +86,38 @@ add_action('wp_head', function () {
             continue;
         }
 
-        $slug     = sanitize_html_class($cat->slug);
-        $selector = '.primary-cat-' . $slug;
-        $color    = sanitize_hex_color($color);
+        $slug  = sanitize_html_class($cat->slug);
+        $color = sanitize_hex_color($color);
+
+        // Scope: ONLY post cards (important)
+        $selector = '.post-card.primary-cat-' . $slug;
 
         /**
-         * Define CSS variable
+         * Base variable
          */
-        echo esc_attr($selector) . ' { --cat-color: ' . esc_attr($color) . '; }';
+        echo "$selector { --cat-color: $color; }";
 
         /**
-         * Apply styles conditionally
+         * Token mapping instead of direct styling
          */
-
-        // Card border
-        if (get_theme_mod('cat_color_apply_card_border')) {
-            echo esc_attr($selector) . ' { border-left: 4px solid var(--cat-color); }';
-        }
 
         // Title
         if (get_theme_mod('cat_color_apply_title')) {
-            echo esc_attr($selector) . ' .entry-title a { color: var(--cat-color); }';
+            echo "$selector { --bs-heading-color: $color; --bs-link-color: $color; }";
         }
 
-        // Read more
+        // Read more (button-aware)
         if (get_theme_mod('cat_color_apply_read_more')) {
-            echo esc_attr($selector) . ' .read-more { color: var(--cat-color); }';
+            echo "$selector { 
+                --bs-btn-bg: $color;
+                --bs-btn-border-color: $color;
+                --bs-btn-color: #fff;
+            }";
+        }
+
+        // Border (still component-level, but acceptable)
+        if (get_theme_mod('cat_color_apply_card_border')) {
+            echo "$selector { --post-card-border: $color; }";
         }
     }
 
