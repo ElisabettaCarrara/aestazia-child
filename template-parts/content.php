@@ -34,18 +34,18 @@
 						aestazia_posted_by();
 
 						// Categories
-						$categories_list = get_the_category_list( esc_html__( ', ', 'aestazia-child' ) );
-						if ( $categories_list ) {
-							// Using 'ms-2' Bootstrap class to add a small gap after the date/author
-							printf( '<span class="cat-links ms-2">%s</span>', $categories_list ); 
-						}
+$categories_list = get_the_category_list( esc_html__( ', ', 'aestazia-child' ) );
+if ( $categories_list ) {
+	// Using wp_kses_post to satisfy WPCS late-escaping rules for HTML strings
+	printf( '<span class="cat-links ms-2">%s</span>', wp_kses_post( $categories_list ) ); 
+}
 
-						// Tags
-						$tags_list = get_the_tag_list( '', esc_html__( ', ', 'aestazia-child' ) );
-						if ( $tags_list ) {
-							// Using 'ms-2' Bootstrap class to add a small gap after the categories
-							printf( '<span class="tags-links ms-2">%s</span>', $tags_list );
-						}
+// Tags
+$tags_list = get_the_tag_list( '', esc_html__( ', ', 'aestazia-child' ) );
+if ( $tags_list ) {
+	// Using wp_kses_post to satisfy WPCS late-escaping rules for HTML strings
+	printf( '<span class="tags-links ms-2">%s</span>', wp_kses_post( $tags_list ) );
+}
 						?>
 					</div><!-- .entry-meta -->
 				<?php endif; ?>
