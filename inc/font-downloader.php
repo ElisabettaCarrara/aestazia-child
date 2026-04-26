@@ -52,7 +52,11 @@ function aestazia_child_download_fonts_locally( $manager ) {
 
 	$css = wp_remote_retrieve_body( $response );
 
-	if ( ! file_exists( $fonts_dir ) ) {
+	require_once ABSPATH . 'wp-admin/includes/file.php';
+	WP_Filesystem();
+	global $wp_filesystem;
+
+	if ( ! $wp_filesystem->is_dir( $fonts_dir ) ) {
 		wp_mkdir_p( $fonts_dir );
 	} else {
 		// Clear old fonts from the directory.
@@ -80,10 +84,10 @@ function aestazia_child_download_fonts_locally( $manager ) {
 			}
 
 			$font_content = wp_remote_retrieve_body( $font_response );
-			$filename     = basename( parse_url( $url, PHP_URL_PATH ) );
+			$filename     = basename( wp_parse_url( $url, PHP_URL_PATH ) );
 
 			// Save the font file locally.
-			$saved = file_put_contents( trailingslashit( $fonts_dir ) . $filename, $font_content );
+			$saved = $wp_filesystem->put_contents( trailingslashit( $fonts_dir ) . $filename, $font_content, FS_CHMOD_FILE );
 
 			if ( $saved ) {
 				// Replace the remote URL with the local URL in the CSS.
@@ -94,7 +98,7 @@ function aestazia_child_download_fonts_locally( $manager ) {
 	}
 
 	// Save the final CSS file.
-	file_put_contents( trailingslashit( $fonts_dir ) . 'fonts.css', $css );
+	$wp_filesystem->put_contents( trailingslashit( $fonts_dir ) . 'fonts.css', $css, FS_CHMOD_FILE );
 }
 add_action( 'customize_save_after', 'aestazia_child_download_fonts_locally' );
 
@@ -104,15 +108,19 @@ add_action( 'customize_save_after', 'aestazia_child_download_fonts_locally' );
  * @param string $dir The directory path to clear.
  */
 function aestazia_child_clear_font_directory( $dir ) {
-	if ( ! is_dir( $dir ) ) {
+	require_once ABSPATH . 'wp-admin/includes/file.php';
+	WP_Filesystem();
+	global $wp_filesystem;
+
+	if ( ! $wp_filesystem->is_dir( $dir ) ) {
 		return;
 	}
 
 	$files = glob( trailingslashit( $dir ) . '*' );
 	if ( ! empty( $files ) ) {
 		foreach ( $files as $file ) {
-			if ( is_file( $file ) ) {
-				unlink( $file );
+			if ( $wp_filesystem->is_file( $file ) ) {
+				$wp_filesystem->delete( $file );
 			}
 		}
 	}
