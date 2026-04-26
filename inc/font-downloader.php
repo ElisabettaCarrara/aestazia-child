@@ -14,10 +14,14 @@
  * @param WP_Customize_Manager $manager Customizer object.
  */
 function aestazia_child_download_fonts_locally( $manager ) {
+	$body_setting    = $manager->get_setting( 'aestazia_font_body' );
+	$heading_setting = $manager->get_setting( 'aestazia_font_heading' );
+	$subhead_setting = $manager->get_setting( 'aestazia_font_subhead' );
+
 	$fonts = array(
-		$manager->get_setting( 'aestazia_font_body' ) ? $manager->get_setting( 'aestazia_font_body' )->post_value() : get_theme_mod( 'aestazia_font_body' ),
-		$manager->get_setting( 'aestazia_font_heading' ) ? $manager->get_setting( 'aestazia_font_heading' )->post_value() : get_theme_mod( 'aestazia_font_heading' ),
-		$manager->get_setting( 'aestazia_font_subhead' ) ? $manager->get_setting( 'aestazia_font_subhead' )->post_value() : get_theme_mod( 'aestazia_font_subhead' ),
+		$body_setting && null !== $body_setting->post_value() ? $body_setting->post_value() : get_theme_mod( 'aestazia_font_body' ),
+		$heading_setting && null !== $heading_setting->post_value() ? $heading_setting->post_value() : get_theme_mod( 'aestazia_font_heading' ),
+		$subhead_setting && null !== $subhead_setting->post_value() ? $subhead_setting->post_value() : get_theme_mod( 'aestazia_font_subhead' ),
 	);
 
 	$fonts = array_unique( array_filter( $fonts ) );
@@ -56,6 +60,12 @@ function aestazia_child_download_fonts_locally( $manager ) {
 	WP_Filesystem();
 	global $wp_filesystem;
 
+	if ( empty( $wp_filesystem ) ) {
+		require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php';
+		require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php';
+		$wp_filesystem = new WP_Filesystem_Direct( null );
+	}
+
 	if ( ! $wp_filesystem->is_dir( $fonts_dir ) ) {
 		wp_mkdir_p( $fonts_dir );
 	} else {
@@ -91,7 +101,7 @@ function aestazia_child_download_fonts_locally( $manager ) {
 
 			if ( $saved ) {
 				// Replace the remote URL with the local URL in the CSS.
-				$local_url = $fonts_url . $filename;
+				$local_url = trailingslashit( $fonts_url ) . $filename;
 				$css       = str_replace( $url, $local_url, $css );
 			}
 		}
@@ -111,6 +121,12 @@ function aestazia_child_clear_font_directory( $dir ) {
 	require_once ABSPATH . 'wp-admin/includes/file.php';
 	WP_Filesystem();
 	global $wp_filesystem;
+
+	if ( empty( $wp_filesystem ) ) {
+		require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php';
+		require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php';
+		$wp_filesystem = new WP_Filesystem_Direct( null );
+	}
 
 	if ( ! $wp_filesystem->is_dir( $dir ) ) {
 		return;
