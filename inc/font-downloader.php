@@ -76,10 +76,10 @@ function aestazia_child_download_fonts_locally( $manager ) {
 		aestazia_child_clear_font_directory( $fonts_dir );
 	}
 
-	// Extract all woff2 URLs from the CSS.
-	preg_match_all( '/url\((https:\/\/fonts\.bunny\.net[^)]+\.woff2)\)/i', $css, $matches );
+	// Extract all woff2 and woff URLs from the CSS.
+	preg_match_all( '/url\((https:\/\/fonts\.bunny\.net[^)]+\.woff2?)\)/i', $css, $matches );
 
-	$fonts_url = trailingslashit( $upload_dir['baseurl'] ) . 'aestazia-fonts';
+	$fonts_url_path = trailingslashit( wp_parse_url( $upload_dir['baseurl'], PHP_URL_PATH ) ) . 'aestazia-fonts';
 
 	if ( ! empty( $matches[1] ) ) {
 		$urls = array_unique( $matches[1] );
@@ -104,8 +104,8 @@ function aestazia_child_download_fonts_locally( $manager ) {
 			$saved = $fs->put_contents( trailingslashit( $fonts_dir ) . $filename, $font_content, FS_CHMOD_FILE );
 
 			if ( $saved ) {
-				// Replace the remote URL with the local URL in the CSS.
-				$local_url = trailingslashit( $fonts_url ) . $filename;
+				// Replace the remote URL with the root-relative local URL in the CSS.
+				$local_url = trailingslashit( $fonts_url_path ) . $filename;
 				$css       = str_replace( $url, $local_url, $css );
 			}
 		}
