@@ -31,33 +31,31 @@ Theme Name: Aestazia Child
 :root {
 
   /* === Bootstrap Core (fallback defaults) === */
-  --bs-primary: #E34A6F;
-  --bs-secondary: #279D9F;
+  --bs-primary: #0d6efd;
+  --bs-secondary: #6c757d;
+  --bs-light: #f8f9fa;
+  --bs-dark: #212529;
 
   --bs-body-bg: #ffffff;
-  --bs-body-color: #5B5B5B;
+  --bs-body-color: #212529;
 
-  --bs-heading-color: #423E3B;
+  --bs-heading-color: #212529;
 
-  --bs-border-color: rgba(0,0,0,0.1);
+  --bs-border-color: rgba(0,0,0,0.175);
 
-  --bs-link-color: var(--bs-secondary);
-  --bs-link-hover-color: var(--bs-primary);
+  --bs-link-color: var(--bs-primary);
+  --bs-link-hover-color: #0a58ca;
 
   /* Buttons */
   --bs-btn-bg: var(--bs-primary);
   --bs-btn-border-color: var(--bs-primary);
-  --bs-btn-hover-bg: #c63c5f;
-  --bs-btn-hover-border-color: #c63c5f;
+  --bs-btn-hover-bg: #0b5ed7;
+  --bs-btn-hover-border-color: #0a58ca;
   --bs-btn-color: #ffffff;
 
-  /* === Non-Bootstrap semantic tokens === */
-  --color-accent: #FEC3A6;
-  --color-light: #DEFFFC;
-
   /* Effects */
-  --focus-ring-primary: rgba(227, 74, 111, 0.5);
-  --focus-ring-secondary: rgba(39, 157, 159, 0.5);
+  --focus-ring-primary: rgba(13, 110, 253, 0.25);
+  --focus-ring-secondary: rgba(108, 117, 125, 0.25);
 
   /* Post Card */
   --post-card-radius: 5px;
@@ -223,7 +221,7 @@ a:focus {
    ========================= */
 
 .widget {
-  border-bottom: 1px solid var(--color-accent);
+  border-bottom: 1px solid var(--bs-border-color);
   margin-bottom: 1.5rem;
   padding-bottom: 1rem;
 }
@@ -239,8 +237,8 @@ a:focus {
 
 .badge,
 .tagcloud a {
-  background: var(--color-accent);
-  color: var(--bs-heading-color);
+  background: var(--bs-secondary);
+  color: #fff;
   padding: 4px 8px;
   border-radius: 4px;
 }
@@ -268,7 +266,7 @@ blockquote {
 
 pre,
 code {
-  background: var(--color-light);
+  background: var(--bs-light);
   padding: 2px 4px;
   border-radius: 3px;
 }
@@ -297,7 +295,7 @@ code {
    ========================= */
 
 .comment-body {
-  border-top: 1px solid var(--color-light);
+  border-top: 1px solid var(--bs-border-color);
   padding-top: 1rem;
 }
 
@@ -330,8 +328,8 @@ code {
    ========================= */
 
 .site-footer {
-  background: var(--bs-heading-color);
-  color: var(--bs-body-bg);
+  background: var(--bs-dark);
+  color: var(--bs-light);
   padding: 40px 0 20px;
 }
 
@@ -344,7 +342,7 @@ code {
 }
 
 .footer-widget-title {
-  color: var(--color-accent);
+  color: var(--bs-light);
   font-size: 1.2rem;
   margin-bottom: 15px;
 }

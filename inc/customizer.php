@@ -100,27 +100,27 @@ function aestazia_child_customize_register( $wp_customize ) {
 	$wp_customize->add_section(
 		'aestazia_palette',
 		array(
-			'title' => esc_html__( 'Bootstrap Palette', 'aestazia-child' ),
-			'panel' => 'aestazia_design_panel',
+			'title'       => esc_html__( 'Bootstrap Palette', 'aestazia-child' ),
+			'description' => esc_html__( 'Customize the main Bootstrap theme colors. Note: You can use standard Bootstrap utility classes like text-success, bg-danger, alert-warning, or btn-info in your content. These built-in contextual colors remain untouched to preserve their semantic meaning.', 'aestazia-child' ),
+			'panel'       => 'aestazia_design_panel',
 		)
 	);
 
 	$colors = array(
-		'primary'   => esc_html__( 'Primary Color', 'aestazia-child' ),
-		'secondary' => esc_html__( 'Secondary Color', 'aestazia-child' ),
-		'body_bg'   => esc_html__( 'Body Background', 'aestazia-child' ),
-		'body_text' => esc_html__( 'Body Text', 'aestazia-child' ),
-		'heading'   => esc_html__( 'Heading Color', 'aestazia-child' ),
-		'accent'    => esc_html__( 'Accent Color', 'aestazia-child' ),
+		'primary'   => array( 'label' => esc_html__( 'Primary Color', 'aestazia-child' ), 'default' => '#0d6efd', 'desc' => esc_html__( 'Main brand color. Used for primary buttons, active states, and links.', 'aestazia-child' ) ),
+		'secondary' => array( 'label' => esc_html__( 'Secondary Color', 'aestazia-child' ), 'default' => '#6c757d', 'desc' => esc_html__( 'Secondary brand color. Used for secondary buttons and tags.', 'aestazia-child' ) ),
+		'light'     => array( 'label' => esc_html__( 'Light Color', 'aestazia-child' ), 'default' => '#f8f9fa', 'desc' => esc_html__( 'Used for subtle backgrounds and light elements like code blocks.', 'aestazia-child' ) ),
+		'dark'      => array( 'label' => esc_html__( 'Dark Color', 'aestazia-child' ), 'default' => '#212529', 'desc' => esc_html__( 'Used for dark backgrounds like the site footer.', 'aestazia-child' ) ),
+		'body_bg'   => array( 'label' => esc_html__( 'Body Background', 'aestazia-child' ), 'default' => '#ffffff', 'desc' => esc_html__( 'The default background color for the entire page.', 'aestazia-child' ) ),
 	);
 
-	foreach ( $colors as $key => $label ) {
+	foreach ( $colors as $key => $data ) {
 		$setting_id = "aestazia_color_$key";
 
 		$wp_customize->add_setting(
 			$setting_id,
 			array(
-				'default'           => '',
+				'default'           => $data['default'],
 				'sanitize_callback' => 'sanitize_hex_color',
 			)
 		);
@@ -130,8 +130,9 @@ function aestazia_child_customize_register( $wp_customize ) {
 				$wp_customize,
 				$setting_id,
 				array(
-					'label'   => $label,
-					'section' => 'aestazia_palette',
+					'label'       => $data['label'],
+					'description' => $data['desc'],
+					'section'     => 'aestazia_palette',
 				)
 			)
 		);
@@ -282,18 +283,18 @@ function aestazia_child_render_custom_css() {
 
 	// 1. Global Palette.
 	$palette_map = array(
-		'primary'   => '--bs-primary',
-		'secondary' => '--bs-secondary',
-		'body_bg'   => '--bs-body-bg',
-		'body_text' => '--bs-body-color',
-		'heading'   => '--bs-heading-color',
-		'accent'    => '--color-accent',
+		'primary'   => array( 'var' => '--bs-primary',   'default' => '#0d6efd' ),
+		'secondary' => array( 'var' => '--bs-secondary', 'default' => '#6c757d' ),
+		'light'     => array( 'var' => '--bs-light',     'default' => '#f8f9fa' ),
+		'dark'      => array( 'var' => '--bs-dark',      'default' => '#212529' ),
+		'body_bg'   => array( 'var' => '--bs-body-bg',   'default' => '#ffffff' ),
 	);
 
-	foreach ( $palette_map as $key => $var ) {
-		$value = get_theme_mod( "aestazia_color_$key" );
-		if ( $value ) {
-			$root_vars[] = "$var: " . sanitize_hex_color( $value );
+	foreach ( $palette_map as $key => $data ) {
+		$value = get_theme_mod( "aestazia_color_$key", $data['default'] );
+		// Only output if it differs from the standard default, letting CSS handle it otherwise.
+		if ( $value && strtolower( $value ) !== strtolower( $data['default'] ) ) {
+			$root_vars[] = $data['var'] . ': ' . sanitize_hex_color( $value );
 		}
 	}
 
