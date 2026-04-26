@@ -12,6 +12,7 @@
  */
 
 require get_stylesheet_directory() . '/inc/customizer.php';
+require get_stylesheet_directory() . '/inc/font-downloader.php';
 
 /**
  * Enqueue parent and child styles

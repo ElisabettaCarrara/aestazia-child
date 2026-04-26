@@ -399,13 +399,21 @@ function aestazia_child_enqueue_custom_fonts() {
 		return;
 	}
 
-	$families = array();
-	foreach ( $fonts as $font ) {
-		$families[] = str_replace( ' ', '+', $font ) . ':400,500,600,700';
+	$upload_dir = wp_upload_dir();
+	$fonts_dir  = trailingslashit( $upload_dir['basedir'] ) . 'aestazia-fonts';
+	$fonts_url  = trailingslashit( $upload_dir['baseurl'] ) . 'aestazia-fonts';
+	$css_file   = trailingslashit( $fonts_dir ) . 'fonts.css';
+
+	if ( file_exists( $css_file ) ) {
+		$url = trailingslashit( $fonts_url ) . 'fonts.css';
+		wp_enqueue_style( 'aestazia-local-fonts', esc_url( $url ), array(), filemtime( $css_file ) );
+	} else {
+		$families = array();
+		foreach ( $fonts as $font ) {
+			$families[] = str_replace( ' ', '+', $font ) . ':400,500,600,700';
+		}
+		$url = 'https://fonts.bunny.net/css?family=' . implode( '|', $families );
+		wp_enqueue_style( 'aestazia-bunny-fonts', esc_url( $url ), array(), '1.0' );
 	}
-
-	$url = 'https://fonts.bunny.net/css?family=' . implode( '|', $families );
-
-	wp_enqueue_style( 'aestazia-bunny-fonts', esc_url( $url ), array(), '1.0' );
 }
 add_action( 'wp_enqueue_scripts', 'aestazia_child_enqueue_custom_fonts' );
