@@ -60,13 +60,15 @@ function aestazia_child_download_fonts_locally( $manager ) {
 	WP_Filesystem();
 	global $wp_filesystem;
 
-	if ( empty( $wp_filesystem ) ) {
+	$fs = $wp_filesystem;
+
+	if ( empty( $fs ) ) {
 		require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php';
 		require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php';
-		$wp_filesystem = new WP_Filesystem_Direct( null );
+		$fs = new WP_Filesystem_Direct( null );
 	}
 
-	if ( ! $wp_filesystem->is_dir( $fonts_dir ) ) {
+	if ( ! $fs->is_dir( $fonts_dir ) ) {
 		wp_mkdir_p( $fonts_dir );
 	} else {
 		// Clear old fonts from the directory.
@@ -97,7 +99,7 @@ function aestazia_child_download_fonts_locally( $manager ) {
 			$filename     = basename( wp_parse_url( $url, PHP_URL_PATH ) );
 
 			// Save the font file locally.
-			$saved = $wp_filesystem->put_contents( trailingslashit( $fonts_dir ) . $filename, $font_content, FS_CHMOD_FILE );
+			$saved = $fs->put_contents( trailingslashit( $fonts_dir ) . $filename, $font_content, FS_CHMOD_FILE );
 
 			if ( $saved ) {
 				// Replace the remote URL with the local URL in the CSS.
@@ -108,7 +110,7 @@ function aestazia_child_download_fonts_locally( $manager ) {
 	}
 
 	// Save the final CSS file.
-	$wp_filesystem->put_contents( trailingslashit( $fonts_dir ) . 'fonts.css', $css, FS_CHMOD_FILE );
+	$fs->put_contents( trailingslashit( $fonts_dir ) . 'fonts.css', $css, FS_CHMOD_FILE );
 }
 add_action( 'customize_save_after', 'aestazia_child_download_fonts_locally' );
 
@@ -122,21 +124,23 @@ function aestazia_child_clear_font_directory( $dir ) {
 	WP_Filesystem();
 	global $wp_filesystem;
 
-	if ( empty( $wp_filesystem ) ) {
+	$fs = $wp_filesystem;
+
+	if ( empty( $fs ) ) {
 		require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php';
 		require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php';
-		$wp_filesystem = new WP_Filesystem_Direct( null );
+		$fs = new WP_Filesystem_Direct( null );
 	}
 
-	if ( ! $wp_filesystem->is_dir( $dir ) ) {
+	if ( ! $fs->is_dir( $dir ) ) {
 		return;
 	}
 
 	$files = glob( trailingslashit( $dir ) . '*' );
 	if ( ! empty( $files ) ) {
 		foreach ( $files as $file ) {
-			if ( $wp_filesystem->is_file( $file ) ) {
-				$wp_filesystem->delete( $file );
+			if ( $fs->is_file( $file ) ) {
+				$fs->delete( $file );
 			}
 		}
 	}
