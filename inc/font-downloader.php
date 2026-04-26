@@ -46,7 +46,8 @@ function aestazia_child_download_fonts_locally( $manager ) {
 	$response = wp_remote_get(
 		$api_url,
 		array(
-			'timeout' => 15,
+			'timeout'   => 15,
+			'sslverify' => false,
 		)
 	);
 
@@ -87,7 +88,8 @@ function aestazia_child_download_fonts_locally( $manager ) {
 			$font_response = wp_remote_get(
 				$url,
 				array(
-					'timeout' => 15,
+					'timeout'   => 15,
+					'sslverify' => false,
 				)
 			);
 
