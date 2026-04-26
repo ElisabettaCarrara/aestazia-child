@@ -305,6 +305,7 @@ function aestazia_child_render_custom_css() {
 
 	if ( $body ) {
 		$root_vars[] = "--font-body: '" . esc_attr( $body ) . "', sans-serif";
+		$root_vars[] = "--bs-body-font-family: var(--font-body)";
 	}
 	if ( $heading ) {
 		$root_vars[] = "--font-heading-main: '" . esc_attr( $heading ) . "', serif";
@@ -366,9 +367,9 @@ function aestazia_child_render_custom_css() {
 	}
 
 	$final_css .= '
-		body { font-family: var(--font-body, inherit); }
-		h1, h2, h3 { font-family: var(--font-heading-main, inherit); }
-		h4, h5, h6 { font-family: var(--font-heading-sub, inherit); }
+		body { font-family: var(--font-body, inherit) !important; }
+		h1, h2, h3 { font-family: var(--font-heading-main, inherit) !important; }
+		h4, h5, h6 { font-family: var(--font-heading-sub, inherit) !important; }
 	';
 
 	/**
@@ -403,7 +404,7 @@ function aestazia_child_enqueue_custom_fonts() {
 		$families[] = str_replace( ' ', '+', $font ) . ':400,500,600,700';
 	}
 
-	$url = 'https://fonts.bunny.net/css?family=' . implode( '&family=', $families );
+	$url = 'https://fonts.bunny.net/css?family=' . implode( '|', $families );
 
 	wp_enqueue_style( 'aestazia-bunny-fonts', esc_url( $url ), array(), '1.0' );
 }
