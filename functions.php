@@ -27,7 +27,7 @@ function aestazia_child_enqueue_styles() {
 		'aestazia-child',
 		get_stylesheet_uri(),
 		array( 'aestazia-parent' ),
-		'1.2.0'
+		'1.2.1'
 	);
 }
 add_action( 'wp_enqueue_scripts', 'aestazia_child_enqueue_styles' );
