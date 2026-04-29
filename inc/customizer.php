@@ -115,7 +115,7 @@ function aestazia_child_customize_register( $wp_customize ) {
 	);
 
 	foreach ( $colors as $key => $data ) {
-		$setting_id = "aestazia_color_$key";
+		$setting_id = 'aestazia_color_' . $key;
 
 		$wp_customize->add_setting(
 			$setting_id,
@@ -159,7 +159,7 @@ function aestazia_child_customize_register( $wp_customize ) {
 	);
 
 	foreach ( $font_settings as $key => $label ) {
-		$setting_id = "aestazia_font_$key";
+		$setting_id = 'aestazia_font_' . $key;
 
 		$wp_customize->add_setting(
 			$setting_id,
@@ -274,8 +274,46 @@ function aestazia_child_sanitize_fonts( $value ) {
 }
 
 /**
- * Output Dynamic CSS in wp_head.
- * Corrected to satisfy WPCS OutputEscaping requirements.
+ * Build the CSS custom-property value for a font family.
+ *
+ * Each piece is sanitized individually before being concatenated, so the
+ * assembled string never needs a second pass through esc_html() (which
+ * would convert quotes to HTML entities and break the CSS).
+ *
+ * esc_attr() is the correct escaper for a value that will appear inside
+ * a CSS string context: it encodes <, >, &, " and ' as HTML entities only
+ * when the string is later placed in an HTML attribute — but here we call
+ * it purely to strip any characters that should not appear in a font name
+ * (control characters, HTML tags). The result is safe because every font
+ * name coming in has already been validated by aestazia_child_sanitize_fonts(),
+ * which passes it through sanitize_text_field(). esc_attr() therefore acts
+ * as a final belt-and-suspenders guard.
+ *
+ * @param string $font     Validated font family name, e.g. 'Playfair Display'.
+ * @param string $fallback Generic fallback stack, e.g. 'sans-serif'.
+ * @return string Ready-to-embed CSS value, e.g. "'Playfair Display', sans-serif".
+ */
+function aestazia_child_font_css_value( $font, $fallback ) {
+	return "'" . esc_attr( $font ) . "', " . $fallback;
+}
+
+/**
+ * Output dynamic CSS in wp_head.
+ *
+ * All values are sanitized at the point they are added to the output
+ * arrays, not with a blanket esc_html() at the end. Wrapping assembled
+ * CSS in esc_html() is incorrect because it converts single quotes to
+ * &#039; and double quotes to &quot;, which breaks font-family declarations
+ * and any other CSS value that uses quotes.
+ *
+ * Safe output is achieved by:
+ *   - sanitize_hex_color() on every color value.
+ *   - aestazia_child_font_css_value() (which uses esc_attr() internally)
+ *     on every font name.
+ *   - sanitize_html_class() on every category slug.
+ * None of these produce characters that need further HTML-escaping inside
+ * a <style> block, so the final echo is preceded by a PHPCS ignore comment
+ * that explains why.
  */
 function aestazia_child_render_custom_css() {
 	$root_vars     = array();
@@ -291,30 +329,34 @@ function aestazia_child_render_custom_css() {
 	);
 
 	foreach ( $palette_map as $key => $data ) {
-		$value = get_theme_mod( "aestazia_color_$key", $data['default'] );
-		// Only output if it differs from the standard default, letting CSS handle it otherwise.
+		$value = get_theme_mod( 'aestazia_color_' . $key, $data['default'] );
+		// Only output if it differs from the standard default.
 		if ( $value && strtolower( $value ) !== strtolower( $data['default'] ) ) {
+			// sanitize_hex_color() returns a clean '#rrggbb' string with no
+			// characters that need HTML-escaping inside a <style> block.
 			$root_vars[] = $data['var'] . ': ' . sanitize_hex_color( $value );
 		}
 	}
 
-	// 2. Typography Vars.
+	// 2. Typography vars.
 	$body    = get_theme_mod( 'aestazia_font_body' );
 	$heading = get_theme_mod( 'aestazia_font_heading' );
 	$subhead = get_theme_mod( 'aestazia_font_subhead' );
 
 	if ( $body ) {
-		$root_vars[] = "--font-body: '" . esc_attr( $body ) . "', sans-serif";
-		$root_vars[] = "--bs-body-font-family: var(--font-body)";
+		// aestazia_child_font_css_value() sanitizes the name with esc_attr()
+		// before embedding it in the single-quoted CSS string.
+		$root_vars[] = '--font-body: ' . aestazia_child_font_css_value( $body, 'sans-serif' );
+		$root_vars[] = '--bs-body-font-family: var(--font-body)';
 	}
 	if ( $heading ) {
-		$root_vars[] = "--font-heading-main: '" . esc_attr( $heading ) . "', serif";
+		$root_vars[] = '--font-heading-main: ' . aestazia_child_font_css_value( $heading, 'serif' );
 	}
 	if ( $subhead ) {
-		$root_vars[] = "--font-heading-sub: '" . esc_attr( $subhead ) . "', serif";
+		$root_vars[] = '--font-heading-sub: ' . aestazia_child_font_css_value( $subhead, 'serif' );
 	}
 
-	// 3. Category System.
+	// 3. Category system.
 	$categories = get_categories( array( 'hide_empty' => false ) );
 	foreach ( $categories as $cat ) {
 		$color = get_theme_mod( 'cat_color_' . $cat->term_id );
@@ -322,33 +364,35 @@ function aestazia_child_render_custom_css() {
 			continue;
 		}
 
+		// sanitize_hex_color() and sanitize_html_class() both produce
+		// strings that are safe inside a <style> block without further escaping.
 		$color = sanitize_hex_color( $color );
 		$slug  = sanitize_html_class( $cat->slug );
 
-		$card_selector = ".post-card.primary-cat-$slug";
-		$btn_selector  = ".post-card.primary-cat-$slug .btn-primary";
+		$card_selector = '.post-card.primary-cat-' . $slug;
+		$btn_selector  = '.post-card.primary-cat-' . $slug . ' .btn-primary';
 		$card_rules    = array();
 		$btn_rules     = array();
 
 		if ( get_theme_mod( 'cat_color_apply_card_border' ) ) {
-			$card_rules[] = "--post-card-border: $color";
+			$card_rules[] = '--post-card-border: ' . $color;
 		}
 		if ( get_theme_mod( 'cat_color_apply_title' ) ) {
-			$card_rules[] = "--bs-link-color: $color";
+			$card_rules[] = '--bs-link-color: ' . $color;
 		}
 		if ( get_theme_mod( 'cat_color_apply_read_more' ) ) {
-			$btn_rules[] = "--bs-btn-bg: $color";
-			$btn_rules[] = "--bs-btn-border-color: $color";
-			$btn_rules[] = "--bs-btn-color: #fff";
-			$btn_rules[] = "--bs-btn-hover-bg: $color";
-			$btn_rules[] = "--bs-btn-hover-border-color: $color";
+			$btn_rules[] = '--bs-btn-bg: ' . $color;
+			$btn_rules[] = '--bs-btn-border-color: ' . $color;
+			$btn_rules[] = '--bs-btn-color: #fff';
+			$btn_rules[] = '--bs-btn-hover-bg: ' . $color;
+			$btn_rules[] = '--bs-btn-hover-border-color: ' . $color;
 		}
 
 		if ( ! empty( $card_rules ) ) {
-			$scoped_blocks[] = "$card_selector { " . implode( '; ', $card_rules ) . "; }";
+			$scoped_blocks[] = $card_selector . ' { ' . implode( '; ', $card_rules ) . '; }';
 		}
 		if ( ! empty( $btn_rules ) ) {
-			$scoped_blocks[] = "$btn_selector { " . implode( '; ', $btn_rules ) . "; }";
+			$scoped_blocks[] = $btn_selector . ' { ' . implode( '; ', $btn_rules ) . '; }';
 		}
 	}
 
@@ -357,7 +401,7 @@ function aestazia_child_render_custom_css() {
 		return;
 	}
 
-	// Final Sanitized String Construction.
+	// Assemble the final CSS string from individually-sanitized pieces.
 	$final_css = '';
 	if ( ! empty( $root_vars ) ) {
 		$final_css .= ':root { ' . implode( '; ', $root_vars ) . '; }';
@@ -372,19 +416,30 @@ function aestazia_child_render_custom_css() {
 		h4, h5, h6 { font-family: var(--font-heading-sub, inherit) !important; }
 	';
 
-	/**
-	 * WPCS Fix: Clean the string and echo with esc_html.
-	 * Even though it's CSS, using esc_html on the final sanitized block
-	 * satisfies the 'OutputNotEscaped' sniff for most PHPCS configurations.
-	 */
+	// The CSS string is safe to output without esc_html() because every
+	// value it contains was sanitized individually above:
+	//   - Colors: sanitize_hex_color()    → only [#0-9a-fA-F] characters.
+	//   - Font names: esc_attr() via aestazia_child_font_css_value() → no HTML tags.
+	//   - Slugs: sanitize_html_class()    → only [a-z0-9-_] characters.
+	//   - Static strings: hard-coded in this function, no user input.
+	// Applying esc_html() here would corrupt the output by converting the
+	// single quotes in font-family values to &#039;, breaking the CSS.
 	echo '<style id="aestazia-design-system">';
-	echo esc_html( wp_strip_all_tags( $final_css ) );
+	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	echo $final_css;
 	echo '</style>';
 }
 add_action( 'wp_head', 'aestazia_child_render_custom_css' );
 
 /**
  * Enqueue Bunny Fonts based on Customizer selection.
+ *
+ * On first page load after a save, fonts.css will have been written locally
+ * by aestazia_child_download_fonts_locally() (font-downloader.php). We
+ * enqueue that local file. If it does not exist yet (e.g. the download
+ * failed), we fall back to the Bunny Fonts CDN so the selected fonts still
+ * render — though that CDN request is not GDPR-local until the next
+ * successful save triggers the downloader.
  */
 function aestazia_child_enqueue_custom_fonts() {
 	$fonts = array(
@@ -408,6 +463,8 @@ function aestazia_child_enqueue_custom_fonts() {
 		$url = trailingslashit( $fonts_url ) . 'fonts.css';
 		wp_enqueue_style( 'aestazia-local-fonts', esc_url( $url ), array(), filemtime( $css_file ) );
 	} else {
+		// CDN fallback: fonts are served from Bunny Fonts until the next
+		// Customizer save triggers a successful local download.
 		$families = array();
 		foreach ( $fonts as $font ) {
 			$families[] = str_replace( ' ', '+', $font ) . ':400,500,600,700';
