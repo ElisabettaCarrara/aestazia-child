@@ -101,17 +101,17 @@ function aestazia_child_customize_register( $wp_customize ) {
 		'aestazia_palette',
 		array(
 			'title'       => esc_html__( 'Bootstrap Palette', 'aestazia-child' ),
-			'description' => esc_html__( 'Customize the main Bootstrap theme colors. Note: You can use standard Bootstrap utility classes like text-success, bg-danger, alert-warning, or btn-info in your content. These built-in contextual colors remain untouched to preserve their semantic meaning.', 'aestazia-child' ),
+			'description' => esc_html__( 'Customize the main Bootstrap theme colors.', 'aestazia-child' ),
 			'panel'       => 'aestazia_design_panel',
 		)
 	);
 
 	$colors = array(
-		'primary'   => array( 'label' => esc_html__( 'Primary Color', 'aestazia-child' ), 'default' => '#0d6efd', 'desc' => esc_html__( 'Main brand color. Used for primary buttons, active states, and links.', 'aestazia-child' ) ),
-		'secondary' => array( 'label' => esc_html__( 'Secondary Color', 'aestazia-child' ), 'default' => '#6c757d', 'desc' => esc_html__( 'Secondary brand color. Used for secondary buttons and tags.', 'aestazia-child' ) ),
-		'light'     => array( 'label' => esc_html__( 'Light Color', 'aestazia-child' ), 'default' => '#f8f9fa', 'desc' => esc_html__( 'Used for subtle backgrounds and light elements like code blocks.', 'aestazia-child' ) ),
-		'dark'      => array( 'label' => esc_html__( 'Dark Color', 'aestazia-child' ), 'default' => '#212529', 'desc' => esc_html__( 'Used for dark backgrounds like the site footer.', 'aestazia-child' ) ),
-		'body_bg'   => array( 'label' => esc_html__( 'Body Background', 'aestazia-child' ), 'default' => '#ffffff', 'desc' => esc_html__( 'The default background color for the entire page.', 'aestazia-child' ) ),
+		'primary'   => array( 'label' => esc_html__( 'Primary Color', 'aestazia-child' ), 'default' => '#0d6efd' ),
+		'secondary' => array( 'label' => esc_html__( 'Secondary Color', 'aestazia-child' ), 'default' => '#6c757d' ),
+		'light'     => array( 'label' => esc_html__( 'Light Color', 'aestazia-child' ), 'default' => '#f8f9fa' ),
+		'dark'      => array( 'label' => esc_html__( 'Dark Color', 'aestazia-child' ), 'default' => '#212529' ),
+		'body_bg'   => array( 'label' => esc_html__( 'Body Background', 'aestazia-child' ), 'default' => '#ffffff' ),
 	);
 
 	foreach ( $colors as $key => $data ) {
@@ -121,6 +121,7 @@ function aestazia_child_customize_register( $wp_customize ) {
 			$setting_id,
 			array(
 				'default'           => $data['default'],
+				'type'              => 'theme_mod',
 				'sanitize_callback' => 'sanitize_hex_color',
 			)
 		);
@@ -130,9 +131,8 @@ function aestazia_child_customize_register( $wp_customize ) {
 				$wp_customize,
 				$setting_id,
 				array(
-					'label'       => $data['label'],
-					'description' => $data['desc'],
-					'section'     => 'aestazia_palette',
+					'label'   => $data['label'],
+					'section' => 'aestazia_palette',
 				)
 			)
 		);
@@ -149,7 +149,6 @@ function aestazia_child_customize_register( $wp_customize ) {
 		)
 	);
 
-	// Full Bunny Fonts list (cached).
 	$font_choices = aestazia_child_get_bunny_font_choices();
 
 	$font_settings = array(
@@ -165,6 +164,7 @@ function aestazia_child_customize_register( $wp_customize ) {
 			$setting_id,
 			array(
 				'default'           => '',
+				'type'              => 'theme_mod',
 				'sanitize_callback' => 'aestazia_child_sanitize_fonts',
 			)
 		);
@@ -200,6 +200,7 @@ function aestazia_child_customize_register( $wp_customize ) {
 			$setting_id,
 			array(
 				'default'           => '',
+				'type'              => 'theme_mod',
 				'sanitize_callback' => 'sanitize_hex_color',
 			)
 		);
@@ -217,7 +218,7 @@ function aestazia_child_customize_register( $wp_customize ) {
 	}
 
 	/**
-	 * SECTION: Category Behavior (Application Settings)
+	 * SECTION: Category Behavior (FIXED)
 	 */
 	$wp_customize->add_section(
 		'aestazia_category_behavior',
@@ -239,17 +240,20 @@ function aestazia_child_customize_register( $wp_customize ) {
 		$wp_customize->add_setting(
 			$setting_id,
 			array(
-				'default'           => false,
-				'sanitize_callback' => 'wp_validate_boolean',
+				'default'           => 0,
+				'type'              => 'theme_mod',
+				'sanitize_callback' => 'absint',
+				'transport'         => 'refresh',
 			)
 		);
 
 		$wp_customize->add_control(
 			$setting_id,
 			array(
-				'type'    => 'checkbox',
-				'label'   => $label,
-				'section' => 'aestazia_category_behavior',
+				'type'     => 'checkbox',
+				'label'    => $label,
+				'section'  => 'aestazia_category_behavior',
+				'settings' => $setting_id,
 			)
 		);
 	}
