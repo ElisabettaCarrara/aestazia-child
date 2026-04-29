@@ -99,6 +99,10 @@ On every published release, a GitHub Actions workflow automatically packages the
 
 ## Changelog
 
+### 1.2.1
+- Fix: Category Color Application settings in the Customizer were not persisting after save due to improper boolean sanitization.
+- Improvement: Standardized checkbox settings to use `absint` with explicit `theme_mod` type for reliable storage.
+
 ### 1.2.0
 - **Fix**: Font-family CSS declarations were broken by incorrect `esc_html()` wrapping of the inline `<style>` block — quotes were converted to HTML entities, making the browser ignore all font selections.
 - **Fix**: Bunny Fonts downloader used `post_value()` which is only valid during the Customizer preview phase; switched to `get_theme_mod()` so the correct newly-saved fonts are always downloaded.
